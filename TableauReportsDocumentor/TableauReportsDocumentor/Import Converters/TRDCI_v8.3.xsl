@@ -30,7 +30,26 @@
       <tables>
         <xsl:apply-templates select="connection/metadata-records"/>
       </tables>
+      <otherAttrigutes>
+        <xsl:apply-templates select="column[@caption]"/>
+      </otherAttrigutes>
     </reportDataSource>
+  </xsl:template>
+
+  <xsl:template match="column[@caption]" >
+    <column>
+      <xsl:attribute name="order">
+        <xsl:value-of select="count(preceding::column)+1"/>
+      </xsl:attribute>
+      <xsl:attribute name="visible">true</xsl:attribute>
+      <caption>
+        <xsl:value-of select="@caption"/>
+      </caption>
+      <value>
+        <xsl:value-of select="calculation/@formula"/>
+      </value>
+      <xsl:apply-templates select="local-name/text()"/>
+    </column>
   </xsl:template>
 
   <xsl:template match="metadata-records" >
@@ -81,7 +100,21 @@
       <reportTabName>
         <xsl:value-of select="@name"/>
       </reportTabName>
+      <reportTabTitle>
+        <xsl:apply-templates select="layout-options/title"/>
+      </reportTabTitle>
+      <data>
+        <xsl:apply-templates select="table/view/datasource-dependencies/column[@caption]"/>
+      </data>
     </reportTab>
+  </xsl:template>
+
+  <xsl:template match="title" >
+    <xsl:apply-templates select="formatted-text/run"/>
+  </xsl:template>
+  
+  <xsl:template match="run" >
+    <xsl:value-of select="."/>
   </xsl:template>
 
   <xsl:template match="@* | node()" priority="-10">
