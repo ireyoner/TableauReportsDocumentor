@@ -30,14 +30,17 @@
       <tables>
         <xsl:apply-templates select="connection/metadata-records"/>
       </tables>
-      <otherAttrigutes>
-        <xsl:apply-templates select="column[@caption]"/>
-      </otherAttrigutes>
+      <measures>
+        <xsl:apply-templates select="column[@role='measure']"/>
+      </measures>
+      <dimensions>
+        <xsl:apply-templates select="column[@role='dimension']"/>
+      </dimensions>
     </reportDataSource>
   </xsl:template>
 
-  <xsl:template match="column[@caption]" >
-    <column>
+  <xsl:template match="column[@role='measure']" >
+    <measure>
       <xsl:attribute name="order">
         <xsl:value-of select="count(preceding::column)+1"/>
       </xsl:attribute>
@@ -49,7 +52,20 @@
         <xsl:value-of select="calculation/@formula"/>
       </value>
       <xsl:apply-templates select="local-name/text()"/>
-    </column>
+    </measure>
+  </xsl:template>
+
+  <xsl:template match="column[@role='dimension']" >
+    <dimension>
+      <xsl:attribute name="order">
+        <xsl:value-of select="count(preceding::column)+1"/>
+      </xsl:attribute>
+      <xsl:attribute name="visible">true</xsl:attribute>
+      <name>
+        <xsl:value-of select="@name"/>
+      </name>
+      <xsl:apply-templates select="local-name/text()"/>
+    </dimension>
   </xsl:template>
 
   <xsl:template match="metadata-records" >
@@ -103,9 +119,12 @@
       <reportTabTitle>
         <xsl:apply-templates select="layout-options/title"/>
       </reportTabTitle>
-      <data>
-        <xsl:apply-templates select="table/view/datasource-dependencies/column[@caption]"/>
-      </data>
+      <measures>
+        <xsl:apply-templates select="table/view/datasource-dependencies/column[@role='measure']"/>
+      </measures>
+      <dimensions>
+        <xsl:apply-templates select="table/view/datasource-dependencies/column[@role='dimension']"/>
+      </dimensions>
     </reportTab>
   </xsl:template>
 
