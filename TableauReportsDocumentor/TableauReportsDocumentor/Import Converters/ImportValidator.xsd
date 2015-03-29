@@ -14,88 +14,60 @@
     </xs:simpleType>
   </xs:element>
 
-  <xs:element name="report" type="TReport"/>
-
-  <xs:complexType name="TReport">
-    <xs:sequence>
-      <xs:element ref="reportDataSources"/>
-      <xs:element ref="reportTabs"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:element name="reportDataSources" type="T_reportDataSources"/>
-
-  <xs:complexType name="T_reportDataSources">
-    <xs:sequence>
-      <xs:element ref="reportDataSource" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:element name="reportDataSource" type="T_reportDataSource">
+  <xs:element name="report">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="section" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType> 
   </xs:element>
 
-  <xs:complexType name="T_reportDataSource">
-    <xs:sequence>
-      <xs:element ref="caption"/>
-      <xs:element ref="tables" maxOccurs="unbounded"/>
-    </xs:sequence>
-    <xs:attributeGroup ref="AG_reportItem"/>
-  </xs:complexType>
+  <xs:element name="section" type="T_Section"/>
+  <xs:element name="subsection" type="T_SubSection"/>
 
-  <xs:element name="tables" type="T_tables"/>
-  <xs:complexType name="T_tables">
+  <xs:complexType name="T_SubSection">
     <xs:sequence>
-      <xs:element ref="table" maxOccurs="unbounded"/>
+      <xs:element ref="title"/>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="text"/>
+        <xs:element ref="table"/>
+      </xs:choice>
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="T_Section">
+    <xs:sequence>
+      <xs:element ref="title"/>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element ref="text"/>
+        <xs:element ref="table"/>
+      </xs:choice>
+      <xs:element ref="subsection" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="title" type="xs:string"/>
+  <xs:element name="text" type="xs:string"/>
   <xs:element name="table" type="T_table"/>
+
   <xs:complexType name="T_table">
     <xs:sequence>
-      <xs:element ref="caption"/>
-      <xs:element ref="columns"/>
-    </xs:sequence>
-    <xs:attributeGroup ref="AG_reportItem"/>
-  </xs:complexType>
-
-  <xs:element name="columns" type="T_columns"/>
-  <xs:complexType name="T_columns">
-    <xs:sequence>
-      <xs:element ref="column"  maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:element name="column"  type="T_column"> 
-        <!--<xs:attributeGroup ref="AG_reportItem"/>-->
-    
-  </xs:element>
-  <xs:complexType name="T_column">
-    <xs:simpleContent>
-      <xs:extension base="xs:string">
-         <xs:attributeGroup ref="AG_reportItem"/>
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
-
-
-
-  <xs:element name="reportTabs" type="T_reportTabs"/>
-
-  <xs:complexType name="T_reportTabs">
-    <xs:sequence>
-      <xs:element ref="reportTab" maxOccurs="unbounded"/>
+      <xs:element ref="title"/>
+      <xs:element name="header">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="cell" type="xs:string" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="row" maxOccurs="unbounded" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="cell" type="xs:string" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
-
-  <xs:element name="reportTab" type="T_reportTab"/>
-
-  <xs:complexType name="T_reportTab">
-    <xs:sequence>
-      <xs:element ref="reportTabName"/>
-    </xs:sequence>
-    <xs:attributeGroup ref="AG_reportItem"/>
-  </xs:complexType>
-
-  <xs:element name="reportTabName" type="xs:string"/>
 
 </xs:schema>

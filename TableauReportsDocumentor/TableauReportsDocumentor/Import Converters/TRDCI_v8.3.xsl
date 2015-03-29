@@ -5,127 +5,129 @@
   <xsl:output method="xml" indent="yes" omit-xml-declaration="yes" />
 
   <xsl:template match="/workbook">
-    <report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	    xsi:noNamespaceSchemaLocation="C:\Users\hp\Downloads\dok\dok\trc.xsd">
+    <report xsi:noNamespaceSchemaLocation="ImportValidator.xsd" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <xsl:apply-templates select="datasources"/>
       <xsl:apply-templates select="worksheets"/>
     </report>
   </xsl:template>
 
   <xsl:template match="datasources" >
-    <reportDataSources>
+    <section>
+      <title>
+        <xsl:value-of select="local-name(.)"/>
+      </title>
       <xsl:apply-templates select="datasource[@caption]"/>
-    </reportDataSources>
+    </section>
   </xsl:template>
 
   <xsl:template match="datasource" >
-    <reportDataSource>
-      <xsl:attribute name="order">
-        <xsl:value-of select="count(preceding::datasource)+1"/>      
-      </xsl:attribute>
-      <xsl:attribute name="visible">true</xsl:attribute>
-      <caption>
+    <subsection>
+      <title>
         <xsl:value-of select="@caption"/>
-      </caption>
-      <tables>
+      </title>
+      <table>
+        <title>metadata-records</title>
         <xsl:apply-templates select="connection/metadata-records"/>
-      </tables>
-      <measures>
-        <xsl:apply-templates select="column[@role='measure']"/>
-      </measures>
-      <dimensions>
-        <xsl:apply-templates select="column[@role='dimension']"/>
-      </dimensions>
-    </reportDataSource>
+      </table>
+      <xsl:apply-templates select="." mode="measures_table"/>
+      <xsl:apply-templates select="." mode="dimensions_table"/>
+    </subsection>
   </xsl:template>
-
-  <xsl:template match="column[@role='measure']" >
-    <measure>
-      <xsl:attribute name="order">
-        <xsl:value-of select="count(preceding::column)+1"/>
-      </xsl:attribute>
-      <xsl:attribute name="visible">true</xsl:attribute>
-      <caption>
-        <xsl:value-of select="@caption"/>
-      </caption>
-      <value>
-        <xsl:value-of select="calculation/@formula"/>
-      </value>
-      <xsl:apply-templates select="local-name/text()"/>
-    </measure>
+ 
+  <xsl:template match="*" mode="measures_table">
+    <table>
+      <title>measures</title>
+      <header>
+        <cell>caption</cell>
+        <cell>formula</cell>
+      </header>
+      <xsl:for-each select="column[@role='measure']">
+        <row>
+          <cell>
+            <xsl:value-of select="@caption"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="calculation/@formula"/>
+          </cell>
+        </row> 
+      </xsl:for-each>
+    </table>
   </xsl:template>
-
-  <xsl:template match="column[@role='dimension']" >
-    <dimension>
-      <xsl:attribute name="order">
-        <xsl:value-of select="count(preceding::column)+1"/>
-      </xsl:attribute>
-      <xsl:attribute name="visible">true</xsl:attribute>
-      <name>
-        <xsl:value-of select="@name"/>
-      </name>
-      <xsl:apply-templates select="local-name/text()"/>
-    </dimension>
+  
+  <xsl:template match="*" mode="dimensions_table">
+    <table>
+      <title>dimensions</title>
+      <header>
+        <cell>dimension</cell>
+      </header>
+      <xsl:for-each select="column[@role='dimension']">
+        <row>
+          <cell>
+            <xsl:value-of select="@name"/>
+          </cell>
+        </row> 
+      </xsl:for-each>
+    </table>
   </xsl:template>
 
   <xsl:template match="metadata-records" >
+    <header>
+      <cell>Table name</cell>
+      <cell>Column name</cell>
+    </header>
     <xsl:for-each select="metadata-record[@class='column' 
                            and not(parent-name = following::metadata-record[@class='column']/parent-name)]">
       <xsl:sort select=".//parent-name"/>
       <xsl:variable name="tableName" select=".//parent-name"/>
-      <table>
-        <xsl:attribute name="order">
-            <xsl:value-of select="count(preceding::metadata-records//parent-name)+1"/>      
-        </xsl:attribute>
-        <xsl:attribute name="visible">true</xsl:attribute>
-        <caption>
-          <xsl:value-of select="$tableName"/>
-        </caption>
-        <columns>
-          <xsl:apply-templates select="../metadata-record[@class='column' and parent-name/text() = $tableName]">
-            <xsl:sort select="local-name"/>
-          </xsl:apply-templates>
-        </columns>
-      </table>
+      <xsl:for-each select="../metadata-record[@class='column' and parent-name/text() = $tableName]/local-name">
+        <xsl:sort select="local-name"/>
+        <row>
+          <cell>
+            <xsl:value-of select="$tableName"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="text()"/>
+          </cell>
+        </row>
+      </xsl:for-each>
     </xsl:for-each>
   </xsl:template>
 
   <xsl:template match="metadata-record" >
-    <column>
-      <xsl:attribute name="order">
-        <xsl:value-of select="count(preceding::metadata-record)+1"/>      
-      </xsl:attribute>
-      <xsl:attribute name="visible">true</xsl:attribute>
-      <xsl:apply-templates select="local-name/text()"/>
-    </column>
+    <xsl:apply-templates select="local-name/text()"/>
   </xsl:template>
 
 
   <xsl:template match="worksheets" >
-    <reportTabs>
-      <xsl:apply-templates select="worksheet"/>
-    </reportTabs>
+    <xsl:apply-templates select="worksheet"/>
   </xsl:template>
 
   <xsl:template match="worksheet" >
-    <reportTab>
-      <xsl:attribute name="order">
-        <xsl:value-of select="count(preceding::worksheet)+1"/>
-      </xsl:attribute>
-      <xsl:attribute name="visible">true</xsl:attribute>
-      <reportTabName>
+    <section>
+      <title>
         <xsl:value-of select="@name"/>
-      </reportTabName>
-      <reportTabTitle>
-        <xsl:apply-templates select="layout-options/title"/>
-      </reportTabTitle>
-      <measures>
-        <xsl:apply-templates select="table/view/datasource-dependencies/column[@role='measure']"/>
-      </measures>
-      <dimensions>
-        <xsl:apply-templates select="table/view/datasource-dependencies/column[@role='dimension']"/>
-      </dimensions>
-    </reportTab>
+      </title>
+      <text>Title: <xsl:apply-templates select="layout-options/title"/>
+      </text>
+      <xsl:apply-templates select="table/view/datasource-dependencies" mode="measures_table"/>
+      <xsl:apply-templates select="table/view/datasource-dependencies" mode="dimensions_table"/>
+      <table>
+        <title>quick-filter</title>
+        <header>
+          <cell>Filtr</cell>
+        </header>
+        <xsl:apply-templates select="table/style/style-rule[@element='quick-filter']/format"/>
+      </table>
+    </section>
+  </xsl:template>
+
+  <xsl:template match="format" >
+    <row>
+      <cell>
+        <xsl:value-of select="@value"/>
+      </cell>
+    </row>
   </xsl:template>
 
   <xsl:template match="title" >
@@ -141,4 +143,5 @@
       <xsl:apply-templates select="@* | node()"/>
     </xsl:copy>
   </xsl:template>
+
 </xsl:stylesheet>
