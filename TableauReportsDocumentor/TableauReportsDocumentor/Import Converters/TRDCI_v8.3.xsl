@@ -5,7 +5,7 @@
   <xsl:output method="xml" indent="yes" omit-xml-declaration="yes" />
 
   <xsl:template match="/workbook">
-    <report xsi:noNamespaceSchemaLocation="C:\Projects\TableauReportsDocumentor\TableauReportsDocumentor\TableauReportsDocumentor\Import Converters\ImportValidator.xsd" 
+    <report xsi:noNamespaceSchemaLocation="ImportValidator.xsd" 
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <xsl:apply-templates select="datasources"/>
       <xsl:apply-templates select="worksheets"/>
@@ -172,7 +172,7 @@
     </section>
   </xsl:template>
 
-  <xsl:template match="format" >
+  <xsl:template match="format">
     <row>
       <cell>
         <xsl:value-of select="@value"/>

@@ -16,7 +16,7 @@
             <ToolBarTray MaxHeight="28">
                 <ToolBar ClipToBounds="False" MinWidth="40">
                     <Button Command="New" Content="New" />
-                    <Button Command="Close" Content="Import" />
+                    <Button Content="Import" Click="Button_Click" />
                     <Button Command="Open" Content="Open" />
                     <Button Command="Save" Content="Save" />
                 </ToolBar>
@@ -35,7 +35,7 @@
             </Grid.ColumnDefinitions>
             <TreeView Name="DocumentOutlineTree" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-            <TextBox Grid.Column="2" FontSize="55" TextWrapping="Wrap" AcceptsReturn="True"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
+            <TextBox Name="outputTest" Grid.Column="2" FontSize="55" TextWrapping="Wrap" AcceptsReturn="True"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
         </Grid>
         <StatusBar Name="statusBar" Grid.Row="3"/>
     </Grid>

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TableauReportsDocumentor.Modules.ImportModule;
 
 namespace TableauReportsDocumentor
 {
@@ -23,6 +24,15 @@ namespace TableauReportsDocumentor
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var imp = new Import();
+            foreach (var doc in imp.ImportTableauWorkbooks())
+            {
+                outputTest.Text = doc.OuterXml;
+            }
         }
     }
 }
