@@ -24,8 +24,9 @@
   <xsl:template match="datasource" >
     <subsection>
       <title>
-        <xsl:value-of select="@caption"/>
+        <xsl:value-of select="@name"/>
       </title>
+      <text>Caption: <xsl:value-of select="@caption"/></text>
       <table>
         <title>metadata-records</title>
         <xsl:apply-templates select="connection/metadata-records"/>

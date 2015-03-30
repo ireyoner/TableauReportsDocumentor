@@ -5,6 +5,38 @@
         Title="Tableau Reports Documentor" WindowState="Maximized"
         Icon="Resources/dragon.ico">
     <Grid>
-       
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="28"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0"/>
+        <ToolBarPanel  Grid.Row="1">
+            <ToolBarTray MaxHeight="28">
+                <ToolBar ClipToBounds="False" MinWidth="40">
+                    <Button Command="New" Content="New" />
+                    <Button Command="Close" Content="Import" />
+                    <Button Command="Open" Content="Open" />
+                    <Button Command="Save" Content="Save" />
+                </ToolBar>
+                <ToolBar ClipToBounds="False" MinWidth="40">
+                    <Button Command="Cut" Content="Cut" />
+                    <Button Command="Copy" Content="Copy" />
+                    <Button Command="Paste" Content="Paste" />
+                </ToolBar>
+            </ToolBarTray>
+        </ToolBarPanel>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <TreeView Name="DocumentOutlineTree" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+            <TextBox Grid.Column="2" FontSize="55" TextWrapping="Wrap" AcceptsReturn="True"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
+        </Grid>
+        <StatusBar Name="statusBar" Grid.Row="3"/>
     </Grid>
 </Window>
