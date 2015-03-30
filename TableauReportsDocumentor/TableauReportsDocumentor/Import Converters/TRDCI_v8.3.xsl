@@ -5,7 +5,7 @@
   <xsl:output method="xml" indent="yes" omit-xml-declaration="yes" />
 
   <xsl:template match="/workbook">
-    <report xsi:noNamespaceSchemaLocation="ImportValidator.xsd" 
+    <report xsi:noNamespaceSchemaLocation="C:\Projects\TableauReportsDocumentor\TableauReportsDocumentor\TableauReportsDocumentor\Import Converters\ImportValidator.xsd" 
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <xsl:apply-templates select="datasources"/>
       <xsl:apply-templates select="worksheets"/>
@@ -17,7 +17,7 @@
       <title>
         <xsl:value-of select="local-name(.)"/>
       </title>
-      <xsl:apply-templates select="datasource[@caption]"/>
+      <xsl:apply-templates select="datasource"/>
     </section>
   </xsl:template>
 
@@ -39,11 +39,15 @@
     <table>
       <title>measures</title>
       <header>
+        <cell>name</cell>
         <cell>caption</cell>
         <cell>formula</cell>
       </header>
       <xsl:for-each select="column[@role='measure']">
         <row>
+          <cell>
+            <xsl:value-of select="@name"/>
+          </cell>
           <cell>
             <xsl:value-of select="@caption"/>
           </cell>
@@ -70,24 +74,68 @@
       </xsl:for-each>
     </table>
   </xsl:template>
+  
+  <xsl:template match="*" mode="calculations_table">
+    <table>
+      <title>calculations</title>
+      <header>
+        <cell>name</cell>
+        <cell>caption</cell>
+        <cell>integer</cell>
+        <cell>role</cell>
+        <cell>formula</cell>
+      </header>
+      <xsl:for-each select="column[starts-with(@name, '[Calculation_')]">
+        <row>
+          <cell>
+            <xsl:value-of select="@name"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="@caption"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="@integer"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="@role"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="calculation/@formula"/>
+          </cell>
+        </row> 
+      </xsl:for-each>
+    </table>
+  </xsl:template>
 
   <xsl:template match="metadata-records" >
     <header>
       <cell>Table name</cell>
       <cell>Column name</cell>
+      <cell>local-type</cell>
+      <cell>aggregation</cell>
+      <cell>contains-null</cell>
     </header>
     <xsl:for-each select="metadata-record[@class='column' 
                            and not(parent-name = following::metadata-record[@class='column']/parent-name)]">
       <xsl:sort select=".//parent-name"/>
       <xsl:variable name="tableName" select=".//parent-name"/>
-      <xsl:for-each select="../metadata-record[@class='column' and parent-name/text() = $tableName]/local-name">
+      <xsl:for-each select="../metadata-record[@class='column' and parent-name/text() = $tableName]">
         <xsl:sort select="local-name"/>
         <row>
           <cell>
             <xsl:value-of select="$tableName"/>
           </cell>
           <cell>
-            <xsl:value-of select="text()"/>
+            <xsl:value-of select="local-name/text()"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="local-type/text()"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="aggregation/text()"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="contains-null/text()"/>
           </cell>
         </row>
       </xsl:for-each>
@@ -110,6 +158,7 @@
       </title>
       <text>Title: <xsl:apply-templates select="layout-options/title"/>
       </text>
+      <xsl:apply-templates select="table/view/datasource-dependencies" mode="calculations_table"/>
       <xsl:apply-templates select="table/view/datasource-dependencies" mode="measures_table"/>
       <xsl:apply-templates select="table/view/datasource-dependencies" mode="dimensions_table"/>
       <table>
