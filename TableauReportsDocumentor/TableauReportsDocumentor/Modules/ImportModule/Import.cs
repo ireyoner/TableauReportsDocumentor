@@ -13,29 +13,30 @@ namespace TableauReportsDocumentor.Modules.ImportModule
 {
     class Import
     {
-        public HashSet<XmlDocument> ImportTableauWorkbooks()
+        public XmlDocument ImportTableauWorkbooks()
         {
-            var documents = new HashSet<XmlDocument>();
+
+            XmlDocument doc = new XmlDocument();
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;
+            openFileDialog.Multiselect = false;
             openFileDialog.Filter = "Tableau Workbook (*.twb)|*.twb|All files (*.*)|*.*";
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             if (openFileDialog.ShowDialog() == true)
             {
                 XslCompiledTransform myXslTrans = new XslCompiledTransform();
                 myXslTrans.Load("../../Import Converters/TRDCI_v8.3.xsl");
-                foreach (string filename in openFileDialog.FileNames)
-                {
+                string filename = openFileDialog.FileName;
+                
                     XPathDocument myXPathDoc = new XPathDocument(filename);
-                    XmlDocument doc = new XmlDocument();
+                    
                     using (XmlWriter writer = doc.CreateNavigator().AppendChild())
                     {
                         myXslTrans.Transform(myXPathDoc, null, writer);
                     }
-                    documents.Add(doc);
-                }
+     
+                
             }
-            return documents;
+            return doc;
         }
 
     }

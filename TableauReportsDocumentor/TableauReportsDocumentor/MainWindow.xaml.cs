@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
+using TableauReportsDocumentor.Modules.ExportModule;
 using TableauReportsDocumentor.Modules.ImportModule;
 
 namespace TableauReportsDocumentor
@@ -26,13 +28,25 @@ namespace TableauReportsDocumentor
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private XmlDocument doc;
+
+
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
         {
             var imp = new Import();
-            foreach (var doc in imp.ImportTableauWorkbooks())
+            doc = imp.ImportTableauWorkbooks();
+            outputTest.Text = doc.OuterXml;
+
+        }
+
+        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+            var exp = new Export();
+            if (!exp.ExportTableauReportDocumentatnion(doc))
             {
-                outputTest.Text = doc.OuterXml;
+                MessageBox.Show("There was an error saving your documentation", "Export error");
             }
+
         }
     }
 }

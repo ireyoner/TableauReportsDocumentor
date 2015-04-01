@@ -16,9 +16,9 @@
             <ToolBarTray MaxHeight="28">
                 <ToolBar ClipToBounds="False" MinWidth="40">
                     <Button Command="New" Content="New" />
-                    <Button Content="Import" Click="Button_Click" />
+                    <Button Content="Import" Click="ImportButton_Click" Name="ImportButton"/>
                     <Button Command="Open" Content="Open" />
-                    <Button Command="Save" Content="Save" />
+                    <Button Content="Save Report" Name="ExportButton" Click="ExportButton_Click" />
                 </ToolBar>
                 <ToolBar ClipToBounds="False" MinWidth="40">
                     <Button Command="Cut" Content="Cut" />
