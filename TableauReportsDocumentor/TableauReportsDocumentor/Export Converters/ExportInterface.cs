@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using System.Xml;
 
 namespace TableauReportsDocumentor.Export_Converters
@@ -11,5 +12,6 @@ namespace TableauReportsDocumentor.Export_Converters
     {
         String exportFormat { get; }
         bool export(String exportFileName, XmlDocument exportSource);
+        BitmapFrame icone { get; }
     }
 }

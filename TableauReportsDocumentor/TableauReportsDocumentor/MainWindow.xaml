@@ -4,6 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="TableauReportsDocumentor.MainWindow"
         Title="Tableau Reports Documentor" WindowState="Maximized"
         Icon="Resources/dragon.ico">
+    <Window.CommandBindings>
+        <CommandBinding Command="Open"
+        Executed="Open" />
+        <CommandBinding Command="Save"
+        Executed="Save" />
+    </Window.CommandBindings>
+    <!--
+
+    <Window.InputBindings>
+        <KeyBinding Command="Help" Key="H" Modifiers="Ctrl"/>
+        <MouseBinding Command="Help" MouseAction="LeftDoubleClick" />
+    </Window.InputBindings>-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -11,14 +23,43 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="15"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0"/>
+        <Menu Grid.Row="0" IsMainMenu="True">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open file" Command="Open"/>
+                <MenuItem Header="_Save file" Command="Save"/>
+                <MenuItem Header="_Close" Command="Close"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Cut" Command="Cut">
+                    <!--<MenuItem.Icon>
+                        <Image Source="Images/cut.png" />
+                    </MenuItem.Icon>-->
+                </MenuItem>
+                <MenuItem Header="_Copy" Command="Copy">
+                    <!--<MenuItem.Icon>
+                        <Image Source="Images/copy.png" />
+                    </MenuItem.Icon>-->
+                </MenuItem>
+                <MenuItem Header="_Paste" Command="Paste">
+                    <!--<MenuItem.Icon>
+                        <Image Source="Images/paste.png" />
+                    </MenuItem.Icon>-->
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Export" Name="ExportM"/>
+            <MenuItem Header="_View" />
+            <MenuItem Header="_Window" />
+            <MenuItem Header="_Help" />
+        </Menu>
         <ToolBarPanel  Grid.Row="1">
             <ToolBarTray MaxHeight="28">
                 <ToolBar ClipToBounds="False" MinWidth="40">
-                    <Button Command="New" Content="New" />
-                    <Button Content="Import" Click="ImportButton_Click" Name="ImportButton"/>
-                    <Button Command="Open" Content="Open" />
-                    <Button Content="Save Report" Name="ExportButton" Click="ExportButton_Click" />
+                    <!--<Button Content="Import" Click="ImportButton_Click" Name="ImportButton"/>-->
+                    <Button Click="Open" Content="Open" />
+                    <Button Click="Save" Content="Save" />
+                </ToolBar>
+                <ToolBar  Name="ExportTB" ClipToBounds="False" MinWidth="40">
+                    <Label Content="Export:"/>
                 </ToolBar>
                 <ToolBar ClipToBounds="False" MinWidth="40">
                     <Button Command="Cut" Content="Cut" />
@@ -31,11 +72,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
             <TreeView Name="DocumentOutlineTree" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-            <TextBox Name="outputTest" Grid.Column="2" FontSize="55" TextWrapping="Wrap" AcceptsReturn="True"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
+            <TextBox  Name="outputTest" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
         </Grid>
         <StatusBar Name="statusBar" Grid.Row="3"/>
     </Grid>

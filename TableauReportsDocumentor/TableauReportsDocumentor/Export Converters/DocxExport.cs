@@ -5,17 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using Novacode;
 using System.Xml;
+using System.Windows.Media.Imaging;
 
 namespace TableauReportsDocumentor.Export_Converters
 {
     class DocxExport : ExportInterface
     {
 
-        public string exportFormat
+        string ExportInterface.exportFormat
         {
-            get { throw new NotImplementedException(); }
+            get { return "docx"; }
         }
 
+        BitmapFrame ExportInterface.icone
+        {
+            get {
+                Uri iconUri = new Uri("docx.ico", UriKind.RelativeOrAbsolute);
+                return BitmapFrame.Create(iconUri);
+            }
+        }
+        
         public bool export(string exportFileName, System.Xml.XmlDocument exportSource)
         {
 
@@ -118,6 +127,8 @@ namespace TableauReportsDocumentor.Export_Converters
             //throw new NotImplementedException();
             return true;
         }
+
+
 
     }
 }
