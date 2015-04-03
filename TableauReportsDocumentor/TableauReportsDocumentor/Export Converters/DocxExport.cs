@@ -11,31 +11,32 @@ namespace TableauReportsDocumentor.Export_Converters
 {
     class DocxExport : ExportInterface
     {
-
-        string ExportInterface.exportFormat
+        public string menuItemText
         {
             get { return "docx"; }
         }
 
-        string ExportInterface.displayName
+        public BitmapFrame menuItemIcone
         {
-            get { return "docx"; }
-        }
-
-        BitmapFrame ExportInterface.icone
-        {
-            get {
-                Uri iconUri = new Uri("docx.ico", UriKind.RelativeOrAbsolute);
-                return BitmapFrame.Create(iconUri);
+            get
+            {
+                return null;
+                //Uri iconUri = new Uri("docx.ico", UriKind.RelativeOrAbsolute);
+                //return BitmapFrame.Create(iconUri);
             }
         }
 
-        string ExportInterface.exportFormatFilter
+        public object toolBarButtonContent
+        {
+            get { return menuItemText; }
+        }
+
+        public string exportSaveFileDialogFilter
         {
             get { return "Docx document|*.docx"; }
         }
 
-        bool ExportInterface.export(string exportFileName, System.Xml.XmlDocument exportSource)
+        public bool export(string exportFileName, System.Xml.XmlDocument exportSource)
         {
 
 
@@ -137,9 +138,6 @@ namespace TableauReportsDocumentor.Export_Converters
             //throw new NotImplementedException();
             return true;
         }
-
-
-
 
     }
 }

@@ -32,51 +32,50 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             this.exportToolBar = exportToolBar;
             this.menuItemClick = menuItemClick;
             this.exportMenu = exportMenu;
+            exporters = new Dictionary<string, ExportInterface>();
 
-            exporters = loadExportres();
+            loadExportres();
         }
 
-        private Dictionary<string, ExportInterface> loadExportres()
+        private void loadExportres()
         {
-            var exporters = new Dictionary<string, ExportInterface>();
-
             // TO DO: tutaj dodać pobieranie dynamiczne zamiast tego
             registerExporter(new DocxExport());
-            //registerExporter(new DocxExport());
-
-            return exporters;
         }
 
         public void registerExporter(ExportInterface exporter)
         {
-            exporters.Add(exporter.displayName, exporter);
-            setupExporterButton(exporter);
-            setupExporterMenuItem(exporter);
+            if (exporter.menuItemText != null)
+            {
+                String id = "exporter_" + exporters.Count;
+                exporters.Add(id, exporter);
+                setupExporterButton(id, exporter);
+                setupExporterMenuItem(id, exporter);
+            }
         }
 
-        private void setupExporterButton(ExportInterface exporter)
+        private void setupExporterButton(String id, ExportInterface exporter)
         {
-            var button = new Button();
-            button.Click += buttonClick;
-            button.ToolTip = exporter.displayName;
-
-            // TO DO: poprawić ustawianie ikony zamiast/obok teksu
-            button.Content = exporter.exportFormat;
-            //button.Content = docx.icone;
-
-            exportToolBar.Items.Add(button);
+            if (exporter.toolBarButtonContent != null)
+            {
+                var button = new Button();
+                button.Click += buttonClick;
+                button.Name = "B_" + id;
+                button.Content = exporter.toolBarButtonContent;
+                exportToolBar.Items.Add(button);
+            }
         }
 
-        private void setupExporterMenuItem(ExportInterface exporter)
+        private void setupExporterMenuItem(String id, ExportInterface exporter)
         {
             var menuItem = new MenuItem();
             menuItem.Click += menuItemClick;
-            menuItem.ToolTip += exporter.displayName;
-
-            // TO DO: poprawić ustawianie ikony 
-            //button.Content = docx.icone;
-            menuItem.Header = exporter.displayName;
-
+            menuItem.Name = "M_" + id;
+            menuItem.Header = exporter.menuItemText;
+            if (exporter.menuItemIcone != null)
+            {
+                menuItem.Icon = exporter.menuItemIcone;
+            }
             exportMenu.Items.Add(menuItem);
         }
 
@@ -86,29 +85,37 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             if (sender.GetType() == typeof(Button))
             {
                 var button = (Button)sender;
-                exporter = exporters[(String)button.ToolTip];
+                exporter = exporters[button.Name.Substring(2)];
             }
             else if (sender.GetType() == typeof(MenuItem))
             {
                 var menuItem = (MenuItem)sender;
-                exporter = exporters[(String)menuItem.ToolTip];
+                exporter = exporters[menuItem.Name.Substring(2)];
             }
             else
             {
                 return false;
             }
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = exporter.exportFormatFilter;
-            saveFileDialog.Title = "Save prepared aport documentation";
-            saveFileDialog.ShowDialog();
-
-            if (saveFileDialog.FileName != "")
+            if (exporter.exportSaveFileDialogFilter != null)
             {
-                return exporter.export(saveFileDialog.FileName, document.xml);
-
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = exporter.exportSaveFileDialogFilter;
+                saveFileDialog.Title = "Save prepared aport documentation";
+                saveFileDialog.ShowDialog();
+                if (saveFileDialog.FileName != "")
+                {
+                    return exporter.export(saveFileDialog.FileName, document.xml);
+                }
+                else
+                {
+                    return false;
+                }
             }
-            return false;
+            else
+            {
+                return exporter.export(null, document.xml);
+            }
         }
     }
 }
