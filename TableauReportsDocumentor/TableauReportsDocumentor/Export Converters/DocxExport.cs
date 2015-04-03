@@ -17,6 +17,11 @@ namespace TableauReportsDocumentor.Export_Converters
             get { return "docx"; }
         }
 
+        string ExportInterface.displayName
+        {
+            get { return "docx"; }
+        }
+
         BitmapFrame ExportInterface.icone
         {
             get {
@@ -24,8 +29,13 @@ namespace TableauReportsDocumentor.Export_Converters
                 return BitmapFrame.Create(iconUri);
             }
         }
-        
-        public bool export(string exportFileName, System.Xml.XmlDocument exportSource)
+
+        string ExportInterface.exportFormatFilter
+        {
+            get { return "Docx document|*.docx"; }
+        }
+
+        bool ExportInterface.export(string exportFileName, System.Xml.XmlDocument exportSource)
         {
 
 
@@ -127,6 +137,7 @@ namespace TableauReportsDocumentor.Export_Converters
             //throw new NotImplementedException();
             return true;
         }
+
 
 
 

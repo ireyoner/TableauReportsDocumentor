@@ -28,59 +28,30 @@ namespace TableauReportsDocumentor
     public partial class MainWindow : Window
     {
 
+        Export exporter;
+        private ReportDocument document = new ReportDocument();
+
         public MainWindow()
         {
             InitializeComponent();
-            ExportInterface docx = new DocxExport();
-            var button = new Button();
-            button.Click += ExportButton_Click;
-            button.Content = docx.exportFormat;
-            //button.Content = docx.icone;
-            ExportTB.Items.Add(button);
-
-            MenuItem mi = new MenuItem();
-            mi.Click += ExportButton_Click;
-            mi.Header = docx.exportFormat;
-            ExportM.Items.Add(mi);
+            exporter = new Export(ExportButton_Click, ExportTB, ExportButton_Click, ExportM);
         }
-
-        private ReportDocument document = new ReportDocument();
-
 
         private void WriteDocument()
         {
-            MemoryStream mStream = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(mStream, Encoding.Unicode);
-            writer.Formatting = Formatting.Indented;
-            writer.Indentation = 4;
-            writer.QuoteChar = '\'';
-            document.xml.WriteContentTo(writer);
-            writer.Flush();
-            mStream.Flush();
-
-            // Have to rewind the MemoryStream in order to read
-            // its contents.
-            mStream.Position = 0;
-
-            // Read MemoryStream contents into a StreamReader.
-            StreamReader sReader = new StreamReader(mStream);
-
-            // Extract the text from the StreamReader.
-            String FormattedXML = sReader.ReadToEnd();
-
-            outputTest.Text = FormattedXML;
-            Console.Write(FormattedXML);
-
+            outputTest.Text = document.getAsString();
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            var exp = new Export();
-            if (!exp.ExportTableauReportDocumentatnion(document.xml))
+            if (!exporter.Export_Click(sender, e, document))
             {
                 MessageBox.Show("There was an error saving your documentation", "Export error");
             }
-
+            else
+            {
+                MessageBox.Show("Documentation saved.", "Export OK");
+            }
         }
 
         private void Save(object sender, RoutedEventArgs e)

@@ -10,8 +10,11 @@ namespace TableauReportsDocumentor.Export_Converters
 {
     interface ExportInterface
     {
+        String displayName { get; }
         String exportFormat { get; }
-        bool export(String exportFileName, XmlDocument exportSource);
+        String exportFormatFilter { get; }
         BitmapFrame icone { get; }
+
+        bool export(String exportFileName, XmlDocument exportSource);
     }
 }
