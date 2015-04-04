@@ -13,13 +13,75 @@ namespace TableauReportsDocumentor.ReportDocumet
     class ReportDocument
     {
         public XmlDocument xml { get; private set; }
-        public String name { get; set; }
-        public String path { get; set; }
+        private String fileName;
+        private String directoryName;
+        private Import import;
+
+        public String FileName
+        {
+            get
+            {
+                return fileName;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    this.fileName = Path.GetFileName(value);
+                }
+                else
+                {
+                    this.fileName = null;
+                }
+            }
+        }
+        public String DirectoryName
+        {
+            get
+            {
+                return directoryName;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    this.directoryName = Path.GetDirectoryName(value);
+                }
+                else
+                {
+                    this.directoryName = null;
+                }
+            }
+        }     
+        public String FullFilePath
+        {
+            get
+            {
+                if (fileName != null)
+                    return directoryName + fileName;
+                else
+                    return null;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    this.fileName = Path.GetFileName(value);
+                    this.directoryName = Path.GetDirectoryName(value);
+                }
+                else
+                {
+                    this.fileName = null;
+                    this.directoryName = null;
+                }
+            }
+        }
 
         public ReportDocument()
         {
-            path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            DirectoryName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             this.xml = new XmlDocument();
+            this.import = new Import();
         }
 
         public bool Open()
@@ -27,43 +89,59 @@ namespace TableauReportsDocumentor.ReportDocumet
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = false;
             openFileDialog.Filter = "Tableau Workbook, Tableau Report Documentator|*.trd;*.twb;*.twbx|All files (*.*)|*.*";
-            openFileDialog.InitialDirectory = path;
+            openFileDialog.InitialDirectory = DirectoryName;
 
             if (openFileDialog.ShowDialog() == true)
             {
-                this.name = openFileDialog.SafeFileName;
-                this.path = openFileDialog.FileName;
+                this.DirectoryName = Path.GetDirectoryName(openFileDialog.FileName);
 
                 string filename = openFileDialog.FileName;
 
-                if (filename.EndsWith(".trd"))
+                if (filename.EndsWith(".twb") || filename.EndsWith(".twbx"))
                 {
-                    this.xml.Load(filename);
+                    this.xml = import.ImportTableauWorkbooks(filename);
                 }
                 else
                 {
-                    var imp = new Import();
-                    this.xml = imp.ImportTableauWorkbooks(filename);
+                    if (filename.EndsWith(".trd"))
+                    {
+                        this.FileName = openFileDialog.FileName;
+                    }
+                    this.xml.Load(filename);
                 }
                 return true;
             }
             return false;
         }
 
+        public bool SaveAs()
+        {
+            return Save(false);
+        }
+
         public bool Save()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Tableau Report Documentator (*.trd)|*.trd|All files (*.*)|*.*";
-            saveFileDialog.InitialDirectory = path;
+            return Save(false);
+        }
 
-            if (saveFileDialog.ShowDialog() == true)
+        private bool Save(bool asNewInstance)
+        {
+            if (this.FileName == null || asNewInstance)
             {
-                this.name = saveFileDialog.SafeFileName;
-                this.path = saveFileDialog.FileName;
-
-                string filename = saveFileDialog.FileName;
-
-                this.xml.Save(filename);
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Tableau Report Documentator (*.trd)|*.trd|All files (*.*)|*.*";
+                saveFileDialog.DefaultExt = "trd";
+                saveFileDialog.InitialDirectory = directoryName;
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    this.FullFilePath = saveFileDialog.FileName;
+                    this.xml.Save(this.FullFilePath);
+                    return true;
+                }
+            }
+            else
+            {
+                this.xml.Save(this.FullFilePath);
                 return true;
             }
             return false;
@@ -93,7 +171,8 @@ namespace TableauReportsDocumentor.ReportDocumet
             return FormattedXML;
         }
 
-        public bool saveFromString(String stringXml){
+        public bool saveFromString(String stringXml)
+        {
             return false;
         }
 

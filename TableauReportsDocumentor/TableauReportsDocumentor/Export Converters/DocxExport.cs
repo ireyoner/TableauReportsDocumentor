@@ -11,6 +11,12 @@ namespace TableauReportsDocumentor.Export_Converters
 {
     class DocxExport : ExportInterface
     {
+
+        public string fileExtinsion
+        {
+            get { return "docx"; }
+        }
+
         public string menuItemText
         {
             get { return "docx"; }

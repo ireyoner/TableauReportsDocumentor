@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,9 @@ namespace TableauReportsDocumentor.Modules.ExportModule
 {
     class Export
     {
-        public Dictionary<String, ExportInterface> exporters { get; private set; }
+        public Dictionary<String, Tuple<ExportInterface, int>> exporters { get; private set; }
+        private readonly String fallbackExtension = "trd";
+        private SaveFileDialog saveFileDialog;
 
         private RoutedEventHandler buttonClick;
         private ToolBar exportToolBar;
@@ -32,14 +35,30 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             this.exportToolBar = exportToolBar;
             this.menuItemClick = menuItemClick;
             this.exportMenu = exportMenu;
-            exporters = new Dictionary<string, ExportInterface>();
 
+            this.saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Save prepared aport documentation";
+            saveFileDialog.Filter = "Tableau Report Documentator (*.trd)|*.trd|All files (*.*)|*.*";
+
+            this.exporters = new Dictionary<String, Tuple<ExportInterface, int>>();
+            exporters.Add(fallbackExtension, new Tuple<ExportInterface, int>(new TrdExport(), 1));
             loadExportres();
+        }
+
+        private int saveExporterIndex = 3;
+        private const int noSaveExporterIndex = -1;
+        private Tuple<ExportInterface, int> getExporterTouple(ExportInterface exporter, bool isForSave)
+        {
+            if (isForSave)
+                return new Tuple<ExportInterface, int>(exporter, saveExporterIndex++);
+            else
+                return new Tuple<ExportInterface, int>(exporter, noSaveExporterIndex);
         }
 
         private void loadExportres()
         {
             // TO DO: tutaj dodać pobieranie dynamiczne zamiast tego
+            Console.Out.WriteLine(new DocxExport());
             registerExporter(new DocxExport());
         }
 
@@ -48,7 +67,26 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             if (exporter.menuItemText != null)
             {
                 String id = "exporter_" + exporters.Count;
-                exporters.Add(id, exporter);
+                if (exporter.fileExtinsion != null)
+                {
+                    if (!exporters.ContainsKey(exporter.fileExtinsion))
+                    {
+                        id = exporter.fileExtinsion;
+                        exporters.Add(id, getExporterTouple(exporter,true));
+                        if (saveFileDialog.Filter != null)
+                            saveFileDialog.Filter = saveFileDialog.Filter + "|" + exporter.exportSaveFileDialogFilter;
+                        else
+                            saveFileDialog.Filter = exporter.exportSaveFileDialogFilter;
+                    }
+                    else
+                    {
+                        throw new Exception("Exporter for " + exporter.fileExtinsion + " already exists!");
+                    }
+                }
+                else
+                {
+                    exporters.Add(id, getExporterTouple(exporter, false));
+                }
                 setupExporterButton(id, exporter);
                 setupExporterMenuItem(id, exporter);
             }
@@ -82,35 +120,52 @@ namespace TableauReportsDocumentor.Modules.ExportModule
         public bool Export_Click(object sender, RoutedEventArgs e, ReportDocument document)
         {
             ExportInterface exporter;
+            int saveIndex = noSaveExporterIndex;
             if (sender.GetType() == typeof(Button))
             {
                 var button = (Button)sender;
-                exporter = exporters[button.Name.Substring(2)];
+                exporter = exporters[button.Name.Substring(2)].Item1;
+                saveIndex = exporters[button.Name.Substring(2)].Item2;
             }
             else if (sender.GetType() == typeof(MenuItem))
             {
                 var menuItem = (MenuItem)sender;
-                exporter = exporters[menuItem.Name.Substring(2)];
+                exporter = exporters[menuItem.Name.Substring(2)].Item1;
+                saveIndex = exporters[menuItem.Name.Substring(2)].Item2;
             }
             else
             {
                 return false;
             }
 
-            if (exporter.exportSaveFileDialogFilter != null)
+            if (saveIndex != noSaveExporterIndex)
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = exporter.exportSaveFileDialogFilter;
-                saveFileDialog.Title = "Save prepared aport documentation";
+                saveFileDialog.FileName = Path.GetFileNameWithoutExtension(document.fileName);
+                saveFileDialog.DefaultExt = exporter.fileExtinsion;
+                saveFileDialog.FilterIndex = saveIndex;
+
                 saveFileDialog.ShowDialog();
                 if (saveFileDialog.FileName != "")
                 {
-                    return exporter.export(saveFileDialog.FileName, document.xml);
+                    var fileExtinsion = Path.GetExtension(saveFileDialog.FileName);
+                    if (exporters.ContainsKey(fileExtinsion))
+                    {
+                        exporter = exporters[fileExtinsion].Item1;
+                        return exporter.export(saveFileDialog.FileName, document.xml);
+
+                    }
+                    else if (exporters.ContainsKey(fallbackExtension))
+                    {
+                        exporter = exporters[fallbackExtension].Item1;
+                        var OK = exporter.export(saveFileDialog.FileName, document.xml);
+                        if (OK)
+                        {
+                            document.FullFilePath = saveFileDialog.FileName;
+                        }
+                        return OK;
+                    }
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
             else
             {

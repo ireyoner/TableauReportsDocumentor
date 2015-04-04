@@ -82,8 +82,9 @@
       <header>
         <cell>name</cell>
         <cell>caption</cell>
-        <cell>integer</cell>
+        <cell>type</cell>
         <cell>role</cell>
+        <cell>datatype</cell>
         <cell>formula</cell>
       </header>
       <xsl:for-each select="column[starts-with(@name, '[Calculation_')]">
@@ -95,10 +96,13 @@
             <xsl:value-of select="@caption"/>
           </cell>
           <cell>
-            <xsl:value-of select="@integer"/>
+            <xsl:value-of select="@type"/>
           </cell>
           <cell>
             <xsl:value-of select="@role"/>
+          </cell>
+          <cell>
+            <xsl:value-of select="@datatype"/>
           </cell>
           <cell>
             <xsl:value-of select="calculation/@formula"/>
