@@ -65,6 +65,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Export Converters\TrdExport.cs" />
+    <Compile Include="Modules\ImportModule\ImportTWBandTWBX.cs" />
     <Compile Include="ReportDocumet\ReportDocument.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

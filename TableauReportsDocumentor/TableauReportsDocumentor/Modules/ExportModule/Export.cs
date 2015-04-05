@@ -140,7 +140,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
 
             if (saveIndex != noSaveExporterIndex)
             {
-                saveFileDialog.FileName = Path.GetFileNameWithoutExtension(document.fileName);
+                saveFileDialog.FileName = Path.GetFileNameWithoutExtension(document.FileName);
                 saveFileDialog.DefaultExt = exporter.fileExtinsion;
                 saveFileDialog.FilterIndex = saveIndex;
 
@@ -151,13 +151,13 @@ namespace TableauReportsDocumentor.Modules.ExportModule
                     if (exporters.ContainsKey(fileExtinsion))
                     {
                         exporter = exporters[fileExtinsion].Item1;
-                        return exporter.export(saveFileDialog.FileName, document.xml);
+                        return exporter.export(saveFileDialog.FileName, document.Xml);
 
                     }
                     else if (exporters.ContainsKey(fallbackExtension))
                     {
                         exporter = exporters[fallbackExtension].Item1;
-                        var OK = exporter.export(saveFileDialog.FileName, document.xml);
+                        var OK = exporter.export(saveFileDialog.FileName, document.Xml);
                         if (OK)
                         {
                             document.FullFilePath = saveFileDialog.FileName;
@@ -169,7 +169,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             }
             else
             {
-                return exporter.export(null, document.xml);
+                return exporter.export(null, document.Xml);
             }
         }
     }

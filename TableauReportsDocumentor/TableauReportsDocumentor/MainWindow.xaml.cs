@@ -29,12 +29,13 @@ namespace TableauReportsDocumentor
     {
 
         Export exporter;
-        private ReportDocument document = new ReportDocument();
+        private ReportDocument document;
 
         public MainWindow()
         {
             InitializeComponent();
             exporter = new Export(ExportButton_Click, ExportTB, ExportButton_Click, ExportM);
+            document = new ReportDocument();
         }
 
         private void WriteDocument()
@@ -61,7 +62,16 @@ namespace TableauReportsDocumentor
 
         private void Open(object sender, RoutedEventArgs e)
         {
-            if(document.Open())
+            bool ok = false;
+            try
+            {
+                ok = document.Open();
+            }
+            catch (Exception e2)
+            {
+                MessageBox.Show(e2.Message, "Open error!");
+            }
+            if (ok)
                 WriteDocument();
         }
     }

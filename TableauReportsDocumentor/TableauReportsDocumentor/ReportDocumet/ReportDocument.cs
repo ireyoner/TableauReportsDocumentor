@@ -6,16 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Schema;
 using TableauReportsDocumentor.Modules.ImportModule;
 
 namespace TableauReportsDocumentor.ReportDocumet
 {
     class ReportDocument
     {
-        public XmlDocument xml { get; private set; }
+        private XmlDocument xml;
         private String fileName;
         private String directoryName;
-        private Import import;
+        private ImportTWBandTWBX importTWBandTWBX;
+        private ValidationEventHandler veh;
 
         public String FileName
         {
@@ -52,7 +54,7 @@ namespace TableauReportsDocumentor.ReportDocumet
                     this.directoryName = null;
                 }
             }
-        }     
+        }
         public String FullFilePath
         {
             get
@@ -76,12 +78,36 @@ namespace TableauReportsDocumentor.ReportDocumet
                 }
             }
         }
+        
+        public XmlDocument Xml
+        {
+            get
+            {
+                return xml;
+            }
+            set 
+            {
+                if (value != null)
+                {
+                    var old_xml = xml;
+                    xml = value;
+                    try
+                    {
+                        valideteXML();
+                    }catch(Exception e){
+                        xml = old_xml;
+                        throw e;
+                    }
+                }
+            }
+        }
 
         public ReportDocument()
         {
             DirectoryName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             this.xml = new XmlDocument();
-            this.import = new Import();
+            veh = new ValidationEventHandler(ValidationCallBack);
+            this.importTWBandTWBX = new ImportTWBandTWBX();
         }
 
         public bool Open()
@@ -89,17 +115,17 @@ namespace TableauReportsDocumentor.ReportDocumet
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = false;
             openFileDialog.Filter = "Tableau Workbook, Tableau Report Documentator|*.trd;*.twb;*.twbx|All files (*.*)|*.*";
-            openFileDialog.InitialDirectory = DirectoryName;
+            openFileDialog.InitialDirectory = this.DirectoryName;
 
             if (openFileDialog.ShowDialog() == true)
             {
-                this.DirectoryName = Path.GetDirectoryName(openFileDialog.FileName);
+                this.DirectoryName = openFileDialog.FileName;
 
                 string filename = openFileDialog.FileName;
 
                 if (filename.EndsWith(".twb") || filename.EndsWith(".twbx"))
                 {
-                    this.xml = import.ImportTableauWorkbooks(filename);
+                    this.Xml = importTWBandTWBX.ImportTableauWorkbook(filename);
                 }
                 else
                 {
@@ -107,7 +133,9 @@ namespace TableauReportsDocumentor.ReportDocumet
                     {
                         this.FileName = openFileDialog.FileName;
                     }
-                    this.xml.Load(filename);
+                    var newXml = new XmlDocument();
+                    newXml.Load(filename);
+                    this.Xml = newXml;
                 }
                 return true;
             }
@@ -176,5 +204,30 @@ namespace TableauReportsDocumentor.ReportDocumet
             return false;
         }
 
+        public bool valideteXML()
+        {
+            if (Xml.Schemas.Count < 1)
+            {
+                Xml.Schemas.Add("", "../../Import Converters/ImportValidator.xsd");
+            }
+            Xml.Validate(veh);
+            return true;
+        }
+
+        private static void ValidationCallBack(object sender, ValidationEventArgs args)
+        {
+            String message = "";
+            if (args.Severity == XmlSeverityType.Warning)
+            {
+                message = "\tWarning: Matching schema not found.  No validation occurred." + args.Message;
+            }
+            else
+            {
+                message = "\tValidation error: " + args.Message;
+            }
+            Console.WriteLine(message);
+            throw new Exception("Document validation exception!\n" + message);
+        }
+ 
     }
 }
