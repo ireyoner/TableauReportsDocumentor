@@ -8,32 +8,32 @@ namespace TableauReportsDocumentor.Export_Converters
 {
     class TrdExport : ExportInterface
     {
-        public string menuItemText
+        public string MenuItemText
         {
             get { return null; }
         }
 
-        public string fileExtinsion
+        public string FileExtinsion
         {
             get { return "trd"; }
         }
 
-        public string exportSaveFileDialogFilter
+        public string ExportSaveFileDialogFilter
         {
             get { return null; }
         }
 
-        public System.Windows.Media.Imaging.BitmapFrame menuItemIcone
+        public System.Windows.Media.Imaging.BitmapFrame MenuItemIcone
         {
             get { return null; }
         }
 
-        public object toolBarButtonContent
+        public object ToolBarButtonContent
         {
             get { return null; }
         }
 
-        public bool export(string exportFileName, System.Xml.XmlDocument exportSource)
+        public bool Export(string exportFileName, System.Xml.XmlDocument exportSource)
         {
             exportSource.Save(exportFileName);
             return true;

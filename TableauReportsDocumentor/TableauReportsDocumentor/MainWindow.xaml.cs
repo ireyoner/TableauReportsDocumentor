@@ -15,10 +15,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
+using TableauReportsDocumentor.AppWindows;
 using TableauReportsDocumentor.Export_Converters;
 using TableauReportsDocumentor.Modules.ExportModule;
 using TableauReportsDocumentor.Modules.ImportModule;
-using TableauReportsDocumentor.ReportDocumet;
+using TableauReportsDocumentor.Data;
 
 namespace TableauReportsDocumentor
 {
@@ -28,24 +29,33 @@ namespace TableauReportsDocumentor
     public partial class MainWindow : Window
     {
 
-        Export exporter;
+        private Export exporter;
+        private Import importer;
         private ReportDocument document;
+        
+        private Export Exporter { get { return exporter; } }
+        private Import Importer { get { return importer; } }
+        private ReportDocument Document { get { return document; } set { document = value; } }
 
         public MainWindow()
         {
             InitializeComponent();
+            importer = new Import(ImportButton_Click, ImportM);
+            if (!ImportM.HasItems)
+            {
+                ImportM.IsEnabled = false;
+            }
             exporter = new Export(ExportButton_Click, ExportTB, ExportButton_Click, ExportM);
-            document = new ReportDocument();
-        }
-
-        private void WriteDocument()
-        {
-            outputTest.Text = document.getAsString();
+            if (!ExportM.HasItems)
+            {
+                ImportM.IsEnabled = false;
+            }
+            Document = new ReportDocument();
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!exporter.Export_Click(sender, e, document))
+            if (!Exporter.ExportDocument(sender, e, Document))
             {
                 MessageBox.Show("There was an error saving your documentation", "Export error");
             }
@@ -55,24 +65,50 @@ namespace TableauReportsDocumentor
             }
         }
 
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var document = Importer.ImportDocument(sender, e);
+            }
+            catch (Exception e2)
+            {
+                MessageBox.Show(e2.Message, "Import error!");
+            }
+        }
+
         private void Save(object sender, RoutedEventArgs e)
         {
-            document.Save();
+            Document.Save();
         }
 
         private void Open(object sender, RoutedEventArgs e)
         {
-            bool ok = false;
             try
             {
-                ok = document.Open();
+                Document.Open();
             }
             catch (Exception e2)
             {
                 MessageBox.Show(e2.Message, "Open error!");
             }
-            if (ok)
-                WriteDocument();
+            WriteDocument();
         }
+
+        private void SettingsWndShow(object sender, RoutedEventArgs e)
+        {
+            new SettingsWindow().Show();
+        }
+
+        private void AboutWndShow(object sender, RoutedEventArgs e)
+        {
+            new About().Show();
+        }
+
+        private void WriteDocument()
+        {
+            outputTest.Text = Document.GetAsString();
+        }
+
     }
 }

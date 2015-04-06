@@ -12,18 +12,18 @@ using System.IO.Compression;
 
 namespace TableauReportsDocumentor.Modules.ImportModule
 {
-    class ImportTWBandTWBX
+    class ImportTWBandTWBX : ImportInterface
     {
         private XmlDocument ImportTWB(string filename)
         {
             if (filename.EndsWith(".twb"))
             {
-                return ImportTWB(new XPathDocument(filename));
+                return ImportTWBfromXPathDocument(new XPathDocument(filename));
             }
             return null;
         }
 
-        private XmlDocument ImportTWB(XPathDocument myXPathDoc)
+        private XmlDocument ImportTWBfromXPathDocument(XPathDocument myXPathDoc)
         {
             XmlDocument doc = new XmlDocument();
 
@@ -50,7 +50,7 @@ namespace TableauReportsDocumentor.Modules.ImportModule
                 //        {
                 //            using (Stream appManifestFileStream = appManifestEntry.Open())
                 //            {
-                //                return ImportTWB(new XPathDocument(appManifestFileStream));
+                //                return ImportTWBfromXPathDocument(new XPathDocument(appManifestFileStream));
                 //            }
                 //        }
                 //    }
@@ -68,6 +68,29 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             else if (filename.EndsWith(".twb"))
             {
                 return ImportTWB(filename);
+            }
+            return null;
+        }
+
+        public string MenuItemText
+        {
+            get { return "twb & twbx"; }
+        }
+
+        public System.Windows.Media.Imaging.BitmapFrame MenuItemIcone
+        {
+            get { return null; }
+        }
+
+        public XmlDocument Import()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = false;
+            openFileDialog.Filter = "Tableau Workbook|*.twb;*.twbx|All files (*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                return ImportTableauWorkbook(openFileDialog.FileName);
             }
             return null;
         }

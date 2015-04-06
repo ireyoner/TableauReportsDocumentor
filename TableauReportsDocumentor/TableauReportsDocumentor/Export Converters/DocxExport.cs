@@ -12,17 +12,17 @@ namespace TableauReportsDocumentor.Export_Converters
     class DocxExport : ExportInterface
     {
 
-        public string fileExtinsion
+        public string FileExtinsion
         {
             get { return "docx"; }
         }
 
-        public string menuItemText
+        public string MenuItemText
         {
             get { return "docx"; }
         }
 
-        public BitmapFrame menuItemIcone
+        public BitmapFrame MenuItemIcone
         {
             get
             {
@@ -32,17 +32,17 @@ namespace TableauReportsDocumentor.Export_Converters
             }
         }
 
-        public object toolBarButtonContent
+        public object ToolBarButtonContent
         {
-            get { return menuItemText; }
+            get { return MenuItemText; }
         }
 
-        public string exportSaveFileDialogFilter
+        public string ExportSaveFileDialogFilter
         {
             get { return "Docx document|*.docx"; }
         }
 
-        public bool export(string exportFileName, System.Xml.XmlDocument exportSource)
+        public bool Export(string exportFileName, System.Xml.XmlDocument exportSource)
         {
 
 

@@ -9,7 +9,7 @@ using System.Xml;
 using System.Xml.Schema;
 using TableauReportsDocumentor.Modules.ImportModule;
 
-namespace TableauReportsDocumentor.ReportDocumet
+namespace TableauReportsDocumentor.Data
 {
     class ReportDocument
     {
@@ -89,13 +89,13 @@ namespace TableauReportsDocumentor.ReportDocumet
             {
                 if (value != null)
                 {
-                    var old_xml = xml;
+                    //var old_xml = xml;
                     xml = value;
                     try
                     {
-                        valideteXML();
+                        ValideteXML();
                     }catch(Exception e){
-                        xml = old_xml;
+                        //xml = old_xml;
                         throw e;
                     }
                 }
@@ -103,6 +103,17 @@ namespace TableauReportsDocumentor.ReportDocumet
         }
 
         public ReportDocument()
+        {
+            SetupReportDocument();
+        }
+
+        public ReportDocument(XmlDocument xmlDocument)
+        {
+            SetupReportDocument();
+            this.Xml = xmlDocument;
+        }
+
+        private void SetupReportDocument()
         {
             DirectoryName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             this.xml = new XmlDocument();
@@ -175,36 +186,41 @@ namespace TableauReportsDocumentor.ReportDocumet
             return false;
         }
 
-        public String getAsString()
+        public String GetAsString()
         {
-            MemoryStream mStream = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(mStream, Encoding.Unicode);
-            writer.Formatting = Formatting.Indented;
-            writer.Indentation = 4;
-            writer.QuoteChar = '\'';
-            this.xml.WriteContentTo(writer);
-            writer.Flush();
-            mStream.Flush();
+            if (Xml != null)
+            {
+                MemoryStream mStream = new MemoryStream();
+                XmlTextWriter writer = new XmlTextWriter(mStream, Encoding.Unicode);
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 4;
+                writer.QuoteChar = '\'';
+                this.xml.WriteContentTo(writer);
+                writer.Flush();
+                mStream.Flush();
 
-            // Have to rewind the MemoryStream in order to read
-            // its contents.
-            mStream.Position = 0;
+                // Have to rewind the MemoryStream in order to read
+                // its contents.
+                mStream.Position = 0;
 
-            // Read MemoryStream contents into a StreamReader.
-            StreamReader sReader = new StreamReader(mStream);
+                // Read MemoryStream contents into a StreamReader.
+                StreamReader sReader = new StreamReader(mStream);
 
-            // Extract the text from the StreamReader.
-            String FormattedXML = sReader.ReadToEnd();
+                // Extract the text from the StreamReader.
+                String FormattedXML = sReader.ReadToEnd();
 
-            return FormattedXML;
+                return FormattedXML;
+            }else{
+                return "";
+            }
         }
 
-        public bool saveFromString(String stringXml)
+        public bool SaveFromString(String stringXml)
         {
             return false;
         }
 
-        public bool valideteXML()
+        public bool ValideteXML()
         {
             if (Xml.Schemas.Count < 1)
             {

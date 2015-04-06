@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
 using TableauReportsDocumentor.Export_Converters;
-using TableauReportsDocumentor.ReportDocumet;
+using TableauReportsDocumentor.Data;
 
 namespace TableauReportsDocumentor.Modules.ExportModule
 {
@@ -18,6 +18,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
         public Dictionary<String, Tuple<ExportInterface, int>> exporters { get; private set; }
         private readonly String fallbackExtension = "trd";
         private SaveFileDialog saveFileDialog;
+        private String saveFileDialogFilter;
 
         private RoutedEventHandler buttonClick;
         private ToolBar exportToolBar;
@@ -38,14 +39,14 @@ namespace TableauReportsDocumentor.Modules.ExportModule
 
             this.saveFileDialog = new SaveFileDialog();
             saveFileDialog.Title = "Save prepared aport documentation";
-            saveFileDialog.Filter = "Tableau Report Documentator (*.trd)|*.trd|All files (*.*)|*.*";
+            saveFileDialogFilter = "Tableau Report Documentator (*.trd)|*.trd";
 
             this.exporters = new Dictionary<String, Tuple<ExportInterface, int>>();
-            exporters.Add(fallbackExtension, new Tuple<ExportInterface, int>(new TrdExport(), 1));
+            exporters.Add(fallbackExtension, getExporterTouple(new TrdExport(),true));
             loadExportres();
         }
 
-        private int saveExporterIndex = 3;
+        private int saveExporterIndex = 1;
         private const int noSaveExporterIndex = -1;
         private Tuple<ExportInterface, int> getExporterTouple(ExportInterface exporter, bool isForSave)
         {
@@ -59,28 +60,28 @@ namespace TableauReportsDocumentor.Modules.ExportModule
         {
             // TO DO: tutaj dodać pobieranie dynamiczne zamiast tego
             Console.Out.WriteLine(new DocxExport());
-            registerExporter(new DocxExport());
+            RegisterExporter(new DocxExport());
         }
 
-        public void registerExporter(ExportInterface exporter)
+        public void RegisterExporter(ExportInterface exporter)
         {
-            if (exporter.menuItemText != null)
+            if (exporter.MenuItemText != null)
             {
                 String id = "exporter_" + exporters.Count;
-                if (exporter.fileExtinsion != null)
+                if (exporter.FileExtinsion != null)
                 {
-                    if (!exporters.ContainsKey(exporter.fileExtinsion))
+                    if (!exporters.ContainsKey(exporter.FileExtinsion))
                     {
-                        id = exporter.fileExtinsion;
+                        id = exporter.FileExtinsion;
                         exporters.Add(id, getExporterTouple(exporter,true));
-                        if (saveFileDialog.Filter != null)
-                            saveFileDialog.Filter = saveFileDialog.Filter + "|" + exporter.exportSaveFileDialogFilter;
+                        if (saveFileDialogFilter != null)
+                            saveFileDialogFilter = saveFileDialogFilter + "|" + exporter.ExportSaveFileDialogFilter;
                         else
-                            saveFileDialog.Filter = exporter.exportSaveFileDialogFilter;
+                            saveFileDialogFilter = exporter.ExportSaveFileDialogFilter;
                     }
                     else
                     {
-                        throw new Exception("Exporter for " + exporter.fileExtinsion + " already exists!");
+                        throw new Exception("Exporter for " + exporter.FileExtinsion + " already exists!");
                     }
                 }
                 else
@@ -94,12 +95,12 @@ namespace TableauReportsDocumentor.Modules.ExportModule
 
         private void setupExporterButton(String id, ExportInterface exporter)
         {
-            if (exporter.toolBarButtonContent != null)
+            if (exporter.ToolBarButtonContent != null)
             {
                 var button = new Button();
                 button.Click += buttonClick;
                 button.Name = "B_" + id;
-                button.Content = exporter.toolBarButtonContent;
+                button.Content = exporter.ToolBarButtonContent;
                 exportToolBar.Items.Add(button);
             }
         }
@@ -109,15 +110,15 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             var menuItem = new MenuItem();
             menuItem.Click += menuItemClick;
             menuItem.Name = "M_" + id;
-            menuItem.Header = exporter.menuItemText;
-            if (exporter.menuItemIcone != null)
+            menuItem.Header = exporter.MenuItemText;
+            if (exporter.MenuItemIcone != null)
             {
-                menuItem.Icon = exporter.menuItemIcone;
+                menuItem.Icon = exporter.MenuItemIcone;
             }
             exportMenu.Items.Add(menuItem);
         }
 
-        public bool Export_Click(object sender, RoutedEventArgs e, ReportDocument document)
+        public bool ExportDocument(object sender, RoutedEventArgs e, ReportDocument document)
         {
             ExportInterface exporter;
             int saveIndex = noSaveExporterIndex;
@@ -141,7 +142,8 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             if (saveIndex != noSaveExporterIndex)
             {
                 saveFileDialog.FileName = Path.GetFileNameWithoutExtension(document.FileName);
-                saveFileDialog.DefaultExt = exporter.fileExtinsion;
+                saveFileDialog.Filter = saveFileDialogFilter + "|All files (*.*)|*.*";
+                saveFileDialog.DefaultExt = exporter.FileExtinsion;
                 saveFileDialog.FilterIndex = saveIndex;
 
                 saveFileDialog.ShowDialog();
@@ -151,13 +153,13 @@ namespace TableauReportsDocumentor.Modules.ExportModule
                     if (exporters.ContainsKey(fileExtinsion))
                     {
                         exporter = exporters[fileExtinsion].Item1;
-                        return exporter.export(saveFileDialog.FileName, document.Xml);
+                        return exporter.Export(saveFileDialog.FileName, document.Xml);
 
                     }
                     else if (exporters.ContainsKey(fallbackExtension))
                     {
                         exporter = exporters[fallbackExtension].Item1;
-                        var OK = exporter.export(saveFileDialog.FileName, document.Xml);
+                        var OK = exporter.Export(saveFileDialog.FileName, document.Xml);
                         if (OK)
                         {
                             document.FullFilePath = saveFileDialog.FileName;
@@ -169,7 +171,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             }
             else
             {
-                return exporter.export(null, document.Xml);
+                return exporter.Export(null, document.Xml);
             }
         }
     }

@@ -33,26 +33,15 @@
                 <MenuItem Header="_Close" Command="Close"/>
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="_Cut" Command="Cut">
-                    <!--<MenuItem.Icon>
-                        <Image Source="Images/cut.png" />
-                    </MenuItem.Icon>-->
-                </MenuItem>
-                <MenuItem Header="_Copy" Command="Copy">
-                    <!--<MenuItem.Icon>
-                        <Image Source="Images/copy.png" />
-                    </MenuItem.Icon>-->
-                </MenuItem>
-                <MenuItem Header="_Paste" Command="Paste">
-                    <!--<MenuItem.Icon>
-                        <Image Source="Images/paste.png" />
-                    </MenuItem.Icon>-->
-                </MenuItem>
+                <MenuItem Header="_Cut" Command="Cut"/>
+                <MenuItem Header="_Copy" Command="Copy"/>
+                <MenuItem Header="_Paste" Command="Paste"/>
             </MenuItem>
+            <MenuItem Header="_Import" Name="ImportM"/>
             <MenuItem Header="_Export" Name="ExportM"/>
             <MenuItem Header="_View" />
-            <MenuItem Header="_Window" />
-            <MenuItem Header="_Help" />
+            <MenuItem Header="_Settings" Click="SettingsWndShow" />
+            <MenuItem Header="_About" Click="AboutWndShow" />
         </Menu>
         <ToolBarPanel  Grid.Row="1">
             <ToolBarTray MaxHeight="28">
