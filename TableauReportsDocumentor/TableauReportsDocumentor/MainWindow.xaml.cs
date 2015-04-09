@@ -40,17 +40,25 @@ namespace TableauReportsDocumentor
         public MainWindow()
         {
             InitializeComponent();
-            importer = new Import(ImportButton_Click, ImportM);
-            if (!ImportM.HasItems)
+            try
             {
-                ImportM.IsEnabled = false;
+                importer = new Import(ImportButton_Click, ImportM);
+                if (!ImportM.HasItems)
+                {
+                    ImportM.IsEnabled = false;
+                }
+                exporter = new Export(ExportButton_Click, ExportTB, ExportButton_Click, ExportM);
+                if (!ExportM.HasItems)
+                {
+                    ImportM.IsEnabled = false;
+                }
+                Document = new ReportDocument();
             }
-            exporter = new Export(ExportButton_Click, ExportTB, ExportButton_Click, ExportM);
-            if (!ExportM.HasItems)
+            catch (Exception e2)
             {
-                ImportM.IsEnabled = false;
+                MessageBox.Show(e2.Message, "Init Error!");
+                this.Close();
             }
-            Document = new ReportDocument();
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)

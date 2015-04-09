@@ -7,6 +7,9 @@
   <xsl:template match="/workbook">
     <report xsi:noNamespaceSchemaLocation="ImportValidator.xsd" 
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <title>
+        <xsl:value-of select="local-name(.)"/>
+      </title>
       <xsl:apply-templates select="datasources"/>
       <xsl:apply-templates select="worksheets"/>
     </report>
@@ -44,19 +47,21 @@
         <cell>caption</cell>
         <cell>formula</cell>
       </header>
-      <xsl:for-each select="column[@role='measure']">
-        <row>
-          <cell>
-            <xsl:value-of select="@name"/>
-          </cell>
-          <cell>
-            <xsl:value-of select="@caption"/>
-          </cell>
-          <cell>
-            <xsl:value-of select="calculation/@formula"/>
-          </cell>
-        </row> 
-      </xsl:for-each>
+      <rows>
+        <xsl:for-each select="column[@role='measure']">
+          <row>
+            <cell>
+              <xsl:value-of select="@name"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="@caption"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="calculation/@formula"/>
+            </cell>
+          </row> 
+        </xsl:for-each>
+      </rows>
     </table>
   </xsl:template>
   
@@ -66,13 +71,15 @@
       <header>
         <cell>dimension</cell>
       </header>
-      <xsl:for-each select="column[@role='dimension']">
-        <row>
-          <cell>
-            <xsl:value-of select="@name"/>
-          </cell>
-        </row> 
-      </xsl:for-each>
+      <rows>
+        <xsl:for-each select="column[@role='dimension']">
+          <row>
+            <cell>
+              <xsl:value-of select="@name"/>
+            </cell>
+          </row> 
+        </xsl:for-each>
+      </rows>
     </table>
   </xsl:template>
   
@@ -87,6 +94,7 @@
         <cell>datatype</cell>
         <cell>formula</cell>
       </header>
+      <rows>
       <xsl:for-each select="column[starts-with(@name, '[Calculation_')]">
         <row>
           <cell>
@@ -109,6 +117,7 @@
           </cell>
         </row> 
       </xsl:for-each>
+      </rows>
     </table>
   </xsl:template>
 
@@ -120,6 +129,7 @@
       <cell>aggregation</cell>
       <cell>contains-null</cell>
     </header>
+    <rows>
     <xsl:for-each select="metadata-record[@class='column' 
                            and not(parent-name = following::metadata-record[@class='column']/parent-name)]">
       <xsl:sort select=".//parent-name"/>
@@ -145,6 +155,7 @@
         </row>
       </xsl:for-each>
     </xsl:for-each>
+    </rows>
   </xsl:template>
 
   <xsl:template match="metadata-record" >
@@ -171,7 +182,9 @@
         <header>
           <cell>Filtr</cell>
         </header>
-        <xsl:apply-templates select="table/style/style-rule[@element='quick-filter']/format"/>
+        <rows>
+          <xsl:apply-templates select="table/style/style-rule[@element='quick-filter']/format"/>
+        </rows>
       </table>
     </section>
   </xsl:template>

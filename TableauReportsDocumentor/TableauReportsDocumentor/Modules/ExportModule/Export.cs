@@ -59,8 +59,9 @@ namespace TableauReportsDocumentor.Modules.ExportModule
         private void loadExportres()
         {
             // TO DO: tutaj dodać pobieranie dynamiczne zamiast tego
-            Console.Out.WriteLine(new DocxExport());
-            RegisterExporter(new DocxExport());
+            //RegisterExporter(new DocxExport());
+            RegisterExporter(new ExportDocX());
+            RegisterExporter(new ExportCSV());
         }
 
         public void RegisterExporter(ExportInterface exporter)
@@ -149,12 +150,11 @@ namespace TableauReportsDocumentor.Modules.ExportModule
                 saveFileDialog.ShowDialog();
                 if (saveFileDialog.FileName != "")
                 {
-                    var fileExtinsion = Path.GetExtension(saveFileDialog.FileName);
+                    var fileExtinsion = Path.GetExtension(saveFileDialog.FileName).Substring(1);
                     if (exporters.ContainsKey(fileExtinsion))
                     {
                         exporter = exporters[fileExtinsion].Item1;
                         return exporter.Export(saveFileDialog.FileName, document.Xml);
-
                     }
                     else if (exporters.ContainsKey(fallbackExtension))
                     {

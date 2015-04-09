@@ -69,6 +69,8 @@
     <Compile Include="AppWindows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Export Converters\ExportDocX.cs" />
+    <Compile Include="Export Converters\ExportCSV.cs" />
     <Compile Include="Export Converters\TrdExport.cs" />
     <Compile Include="Modules\ImportModule\ImportInterface.cs" />
     <Compile Include="Modules\ImportModule\ImportTWBandTWBX.cs" />

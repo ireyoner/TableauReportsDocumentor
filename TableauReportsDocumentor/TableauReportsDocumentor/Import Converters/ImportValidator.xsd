@@ -17,9 +17,10 @@
   <xs:element name="report">
     <xs:complexType>
       <xs:sequence>
+        <xs:element ref="title"/>
         <xs:element ref="section" maxOccurs="unbounded"/>
       </xs:sequence>
-    </xs:complexType> 
+    </xs:complexType>
   </xs:element>
 
   <xs:element name="section" type="T_Section"/>
@@ -60,10 +61,16 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="row" maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="rows">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="cell" type="xs:string" maxOccurs="unbounded"/>
+            <xs:element name="row" maxOccurs="unbounded" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="cell" type="xs:string" maxOccurs="unbounded"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
