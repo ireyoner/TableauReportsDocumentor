@@ -18,7 +18,13 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="title"/>
-        <xs:element ref="section" maxOccurs="unbounded"/>
+        <xs:element name="sections">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="section" maxOccurs="unbounded"/>            
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -29,21 +35,35 @@
   <xs:complexType name="T_SubSection">
     <xs:sequence>
       <xs:element ref="title"/>
-      <xs:choice maxOccurs="unbounded" minOccurs="0">
-        <xs:element ref="text"/>
-        <xs:element ref="table"/>
-      </xs:choice>
+      <xs:element name="content">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="text"/>
+            <xs:element ref="table"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="T_Section">
     <xs:sequence>
       <xs:element ref="title"/>
-      <xs:choice maxOccurs="unbounded" minOccurs="0">
-        <xs:element ref="text"/>
-        <xs:element ref="table"/>
-      </xs:choice>
-      <xs:element ref="subsection" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="content">
+        <xs:complexType>
+          <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="text"/>
+            <xs:element ref="table"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="subsections">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="subsection" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 

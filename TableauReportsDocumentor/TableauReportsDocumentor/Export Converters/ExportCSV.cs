@@ -9,7 +9,7 @@ using System.IO;
 
 namespace TableauReportsDocumentor.Export_Converters
 {
-    class ExportCSV : ExportInterface
+    class ExportCSV : ExporterInstance, ExportInterface
     {
         private String fieldsSeparator = ";";
         public string FileExtinsion
@@ -58,48 +58,6 @@ namespace TableauReportsDocumentor.Export_Converters
                 return sb.ToString() + fieldsSeparator;
             }
             return str + fieldsSeparator;
-        }
-
-        public bool Export(string exportFileName, System.Xml.XmlDocument exportSource)
-        {
-            XmlNode root = exportSource.DocumentElement;
-            var csvBuilder = new StringBuilder();
-            csvBuilder.AppendLine();
-            csvBuilder.AppendLine("Section;" + StringToCSVCell(root.SelectSingleNode("title").InnerText));
-
-            foreach (XmlNode section in root.SelectNodes("//section"))
-            {
-                csvBuilder = CreateSection(csvBuilder, section);
-            }
-            File.WriteAllText(exportFileName, csvBuilder.ToString()); 
-            
-            return true;
-        }
-
-        private StringBuilder CreateSection(StringBuilder csvBuilder, XmlNode section)
-        {
-            csvBuilder.AppendLine();
-            csvBuilder.AppendLine();
-            csvBuilder.AppendLine();
-            csvBuilder.AppendLine("Section;" + StringToCSVCell(section.SelectSingleNode("title").InnerText));
-
-            foreach (XmlNode item in section.SelectNodes("table|text"))
-            {
-                if (item.Name == "text")
-                {
-                    csvBuilder = CreateText(csvBuilder, item);
-                }
-                else if (item.Name == "table")
-                {
-                    csvBuilder = CreateTable(csvBuilder, item);
-                }
-            }
-
-            foreach (XmlNode subsection in section.SelectNodes("subsection"))
-            {
-                csvBuilder = CreateSubSection(csvBuilder, subsection);
-            }
-            return csvBuilder;
         }
 
         private StringBuilder CreateSubSection(StringBuilder csvBuilder, XmlNode subSection)
@@ -153,5 +111,81 @@ namespace TableauReportsDocumentor.Export_Converters
             return csvBuilder;
         }
 
+        StringBuilder csvBuilder;
+
+        protected override void ExportInit(string reportTitle, XmlNode rootNode, string exportFileName)
+        {
+            csvBuilder = new StringBuilder();
+            csvBuilder.AppendLine("Report;" + StringToCSVCell(reportTitle));
+        }
+
+        protected override bool ExportEnd(string reportTitle, XmlNode rootNode, string exportFileName)
+        {
+            File.WriteAllText(exportFileName, csvBuilder.ToString());
+            return true;
+        }
+
+        protected override void SectionInit(string sectionTitle, XmlNode sectionNode)
+        {
+            csvBuilder.AppendLine();
+            csvBuilder.AppendLine();
+            csvBuilder.AppendLine();
+            csvBuilder.AppendLine("Section;" + StringToCSVCell(sectionTitle));
+        }
+
+        protected override void SectionContentStart(string sectionTitle, XmlNode sectionNode, int contentNodesCount) { }
+        protected override void SectionContentEnd(string sectionTitle, XmlNode sectionNode) { }
+        protected override void SectionSubsectionsStart(string sectionTitle, XmlNode sectionNode, int subsectionNodesCount) { }
+        protected override void SectionSubsectionsEnd(string sectionTitle, XmlNode sectionNode) { }
+        protected override void SectionEnd(string sectionTitle, XmlNode sectionNode) { }
+
+        protected override void SubSectionInit(string subSectionTitle, XmlNode subSectionNode)
+        {
+            csvBuilder.AppendLine();
+            csvBuilder.AppendLine();
+            csvBuilder.AppendLine("SubSection;" + StringToCSVCell(subSectionTitle));
+        }
+
+        protected override void SubSectionContentStart(string subSectionTitle, XmlNode subSectionNode, int contentNodesCount) { }
+        protected override void SubSectionContentEnd(string subSectionTitle, XmlNode subSectionNode) { }
+        protected override void SubSectionEnd(string subSectionTitle, XmlNode subSectionNode) { }
+
+        protected override void CreateText(XmlNode textNode)
+        {
+            csvBuilder.AppendLine("Text;" + StringToCSVCell(textNode.InnerText));
+        }
+
+        protected override void TableInit(string tableTitle, XmlNode tableNode)
+        {
+            csvBuilder.AppendLine();
+            csvBuilder.AppendLine("Table;" + StringToCSVCell(tableTitle));
+        }
+
+        protected override void TableHeaderStart(string tableTitle, XmlNode headerNode, int headerNodesCount) { }
+
+        protected override void TableHeaderCell(string tableTitle, XmlNode cellNode)
+        {
+            csvBuilder.Append(StringToCSVCell(cellNode.InnerText));
+        }
+
+        protected override void TableHeaderEnd(string tableTitle, XmlNode headerNode)
+        {
+            csvBuilder.AppendLine();
+        }
+
+        protected override void TableRowsStart(string tableTitle, XmlNode rowsNode, int contentNodesCount) { }
+        protected override void TableRowStart(string tableTitle, XmlNode rowNode, int contentNodesCount) { }
+        protected override void TableRowCell(string tableTitle, XmlNode cellNode)
+        {
+           csvBuilder.Append(StringToCSVCell(cellNode.InnerText));
+        }
+
+        protected override void TableRowEnd(string tableTitle, XmlNode rowNode)
+        {
+            csvBuilder.AppendLine();
+        }
+
+        protected override void TableRowsEnd(string tableTitle, XmlNode rowsNode) { }
+        protected override void TableEnd(string tableTitle, XmlNode tableNode) { }
     }
 }

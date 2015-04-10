@@ -44,17 +44,13 @@ namespace TableauReportsDocumentor.Export_Converters
 
         public bool Export(string exportFileName, System.Xml.XmlDocument exportSource)
         {
-            Console.Out.WriteLine("start ");
             XmlNode root = exportSource.DocumentElement;
             DocX document = DocX.Create(exportFileName);
             Paragraph p = document.InsertParagraph();
             p.AppendLine(root.SelectSingleNode("title").InnerText);
 
-            Console.Out.WriteLine("root " + root.Name);
             foreach (XmlNode section in root.SelectNodes("//section"))
             {
-                Console.Out.WriteLine("Section " + section.Name);
-
                 document = CreateSection(document, section);
             }
             document.Save();
@@ -65,9 +61,8 @@ namespace TableauReportsDocumentor.Export_Converters
         private DocX CreateSection(DocX document, XmlNode section)
         {
             var p = document.InsertParagraph(section.SelectSingleNode("title").InnerText);
-            Console.Out.WriteLine("Section " + section.SelectSingleNode("title").InnerText);
 
-            foreach (XmlNode item in section.SelectNodes("table|text"))
+            foreach (XmlNode item in section.SelectNodes("content/*"))
             {
                 if (item.Name == "text")
                 {
@@ -79,7 +74,7 @@ namespace TableauReportsDocumentor.Export_Converters
                 }
             }
 
-            foreach (XmlNode subsection in section.SelectNodes("subsection"))
+            foreach (XmlNode subsection in section.SelectNodes(".//subsection"))
             {
                 document = CreateSubSection(document, subsection);
             }
@@ -89,9 +84,8 @@ namespace TableauReportsDocumentor.Export_Converters
         private DocX CreateSubSection(DocX document, XmlNode subSection)
         {
             var p = document.InsertParagraph(subSection.SelectSingleNode("title").InnerText);
-            Console.Out.WriteLine("    SubSection " + subSection.SelectSingleNode("title").InnerText);
 
-            foreach (XmlNode item in subSection.SelectNodes("table|text"))
+            foreach (XmlNode item in subSection.SelectNodes("content/*"))
             {
                 if (item.Name == "text")
                 {
@@ -115,7 +109,6 @@ namespace TableauReportsDocumentor.Export_Converters
         {
             var p = document.InsertParagraph();
             p.AppendLine(table.SelectSingleNode("title").InnerText);
-            Console.Out.WriteLine("        table " + table.SelectSingleNode("title").InnerText);
 
             XmlNodeList headers = table.SelectNodes("header/cell");
             int colCount = headers.Count;

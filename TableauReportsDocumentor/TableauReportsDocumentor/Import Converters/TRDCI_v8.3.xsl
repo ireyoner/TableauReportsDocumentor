@@ -10,8 +10,10 @@
       <title>
         <xsl:value-of select="local-name(.)"/>
       </title>
-      <xsl:apply-templates select="datasources"/>
-      <xsl:apply-templates select="worksheets"/>
+      <sections>
+        <xsl:apply-templates select="datasources"/>
+        <xsl:apply-templates select="worksheets"/>
+      </sections>
     </report>
   </xsl:template>
 
@@ -20,7 +22,10 @@
       <title>
         <xsl:value-of select="local-name(.)"/>
       </title>
-      <xsl:apply-templates select="datasource"/>
+      <content/>
+      <subsections>
+        <xsl:apply-templates select="datasource"/>
+      </subsections>
     </section>
   </xsl:template>
 
@@ -29,13 +34,15 @@
       <title>
         <xsl:value-of select="@name"/>
       </title>
-      <text>Caption: <xsl:value-of select="@caption"/></text>
-      <table>
-        <title>metadata-records</title>
-        <xsl:apply-templates select="connection/metadata-records"/>
-      </table>
-      <xsl:apply-templates select="." mode="measures_table"/>
-      <xsl:apply-templates select="." mode="dimensions_table"/>
+      <content>
+        <text>Caption: <xsl:value-of select="@caption"/></text>
+        <table>
+          <title>metadata-records</title>
+          <xsl:apply-templates select="connection/metadata-records"/>
+        </table>
+        <xsl:apply-templates select="." mode="measures_table"/>
+        <xsl:apply-templates select="." mode="dimensions_table"/>
+      </content>
     </subsection>
   </xsl:template>
  
@@ -172,20 +179,22 @@
       <title>
         <xsl:value-of select="@name"/>
       </title>
-      <text>Title: <xsl:apply-templates select="layout-options/title"/>
-      </text>
-      <xsl:apply-templates select="table/view/datasource-dependencies" mode="calculations_table"/>
-      <xsl:apply-templates select="table/view/datasource-dependencies" mode="measures_table"/>
-      <xsl:apply-templates select="table/view/datasource-dependencies" mode="dimensions_table"/>
-      <table>
-        <title>quick-filter</title>
-        <header>
-          <cell>Filtr</cell>
-        </header>
-        <rows>
-          <xsl:apply-templates select="table/style/style-rule[@element='quick-filter']/format"/>
-        </rows>
-      </table>
+      <content>
+        <text>Title: <xsl:apply-templates select="layout-options/title"/></text>
+        <xsl:apply-templates select="table/view/datasource-dependencies" mode="calculations_table"/>
+        <xsl:apply-templates select="table/view/datasource-dependencies" mode="measures_table"/>
+        <xsl:apply-templates select="table/view/datasource-dependencies" mode="dimensions_table"/>
+        <table>
+          <title>quick-filter</title>
+          <header>
+            <cell>Filtr</cell>
+          </header>
+          <rows>
+            <xsl:apply-templates select="table/style/style-rule[@element='quick-filter']/format"/>
+          </rows>
+        </table>
+      </content>
+      <subsections/>
     </section>
   </xsl:template>
 
