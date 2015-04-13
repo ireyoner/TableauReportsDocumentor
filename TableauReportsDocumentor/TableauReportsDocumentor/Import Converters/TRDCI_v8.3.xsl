@@ -36,10 +36,7 @@
       </title>
       <content>
         <text>Caption: <xsl:value-of select="@caption"/></text>
-        <table>
-          <title>metadata-records</title>
-          <xsl:apply-templates select="connection/metadata-records"/>
-        </table>
+        <xsl:apply-templates select="connection/metadata-records"/>
         <xsl:apply-templates select="." mode="measures_table"/>
         <xsl:apply-templates select="." mode="dimensions_table"/>
       </content>
@@ -129,46 +126,44 @@
   </xsl:template>
 
   <xsl:template match="metadata-records" >
-    <header>
-      <cell>Table name</cell>
-      <cell>Column name</cell>
-      <cell>local-type</cell>
-      <cell>aggregation</cell>
-      <cell>contains-null</cell>
-    </header>
-    <rows>
-    <xsl:for-each select="metadata-record[@class='column' 
-                           and not(parent-name = following::metadata-record[@class='column']/parent-name)]">
-      <xsl:sort select=".//parent-name"/>
-      <xsl:variable name="tableName" select=".//parent-name"/>
-      <xsl:for-each select="../metadata-record[@class='column' and parent-name/text() = $tableName]">
-        <xsl:sort select="local-name"/>
-        <row>
-          <cell>
-            <xsl:value-of select="$tableName"/>
-          </cell>
-          <cell>
-            <xsl:value-of select="local-name/text()"/>
-          </cell>
-          <cell>
-            <xsl:value-of select="local-type/text()"/>
-          </cell>
-          <cell>
-            <xsl:value-of select="aggregation/text()"/>
-          </cell>
-          <cell>
-            <xsl:value-of select="contains-null/text()"/>
-          </cell>
-        </row>
+    <table>
+      <title>metadata-records</title>
+      <header>
+        <cell>Table name</cell>
+        <cell>Column name</cell>
+        <cell>local-type</cell>
+        <cell>aggregation</cell>
+        <cell>contains-null</cell>
+      </header>
+      <rows>
+      <xsl:for-each select="metadata-record[@class='column' 
+                             and not(parent-name = following::metadata-record[@class='column']/parent-name)]">
+        <xsl:sort select=".//parent-name"/>
+        <xsl:variable name="tableName" select=".//parent-name"/>
+        <xsl:for-each select="../metadata-record[@class='column' and parent-name/text() = $tableName]">
+          <xsl:sort select="local-name"/>
+          <row>
+            <cell>
+              <xsl:value-of select="$tableName"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="local-name/text()"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="local-type/text()"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="aggregation/text()"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="contains-null/text()"/>
+            </cell>
+          </row>
+        </xsl:for-each>
       </xsl:for-each>
-    </xsl:for-each>
-    </rows>
+      </rows>
+    </table>
   </xsl:template>
-
-  <xsl:template match="metadata-record" >
-    <xsl:apply-templates select="local-name/text()"/>
-  </xsl:template>
-
 
   <xsl:template match="worksheets" >
     <xsl:apply-templates select="worksheet"/>
@@ -184,26 +179,28 @@
         <xsl:apply-templates select="table/view/datasource-dependencies" mode="calculations_table"/>
         <xsl:apply-templates select="table/view/datasource-dependencies" mode="measures_table"/>
         <xsl:apply-templates select="table/view/datasource-dependencies" mode="dimensions_table"/>
-        <table>
-          <title>quick-filter</title>
-          <header>
-            <cell>Filtr</cell>
-          </header>
-          <rows>
-            <xsl:apply-templates select="table/style/style-rule[@element='quick-filter']/format"/>
-          </rows>
-        </table>
+        <xsl:apply-templates select="table/style/style-rule[@element='quick-filter']"/>
       </content>
       <subsections/>
     </section>
   </xsl:template>
 
-  <xsl:template match="format">
-    <row>
-      <cell>
-        <xsl:value-of select="@value"/>
-      </cell>
-    </row>
+  <xsl:template match="style-rule[@element='quick-filter']">
+    <table>
+      <title>quick-filter</title>
+      <header>
+        <cell>Filtr</cell>
+      </header>
+      <rows>
+        <xsl:for-each select="format">
+          <row>
+            <cell>
+              <xsl:value-of select="@value"/>
+            </cell>
+          </row>
+        </xsl:for-each>     
+      </rows>
+    </table>
   </xsl:template>
 
   <xsl:template match="title" >
