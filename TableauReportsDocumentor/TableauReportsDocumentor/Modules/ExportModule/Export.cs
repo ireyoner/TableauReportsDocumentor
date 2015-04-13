@@ -38,7 +38,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             this.exportMenu = exportMenu;
 
             this.saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = "Save prepared aport documentation";
+            saveFileDialog.Title = "Save prepared report documentation";
             saveFileDialogFilter = "Tableau Report Documentator (*.trd)|*.trd";
 
             this.exporters = new Dictionary<String, Tuple<ExportInterface, int>>();

@@ -10,6 +10,8 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using System.IO.Compression;
 
+//using System.IO.Compression.FileSystem;
+
 namespace TableauReportsDocumentor.Modules.ImportModule
 {
     class ImportTWBandTWBX : ImportInterface
@@ -42,19 +44,19 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             if (filename.EndsWith(".twbx"))
             {
                 FileStream appArchiveFileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
-                //using (ZipArchive zipArchive = new ZipArchive(appArchiveFileStream, ZipArchiveMode.Read))
-                //{
-                //    foreach (ZipArchiveEntry entry in zipArchive.Entries)
-                //    {
-                //        if (entry.FullName.EndsWith(".twb", StringComparison.OrdinalIgnoreCase))
-                //        {
-                //            using (Stream appManifestFileStream = appManifestEntry.Open())
-                //            {
-                //                return ImportTWBfromXPathDocument(new XPathDocument(appManifestFileStream));
-                //            }
-                //        }
-                //    }
-                //}
+                using (ZipArchive zipArchive = new ZipArchive(appArchiveFileStream, ZipArchiveMode.Read))
+                {
+                    foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                    {
+                        if (entry.FullName.EndsWith(".twb", StringComparison.OrdinalIgnoreCase))
+                        {
+                            using (Stream appManifestFileStream = entry.Open())
+                            {
+                                return ImportTWBfromXPathDocument(new XPathDocument(appManifestFileStream));
+                            }
+                        }
+                    }
+                }
             }
             return null;
         }
