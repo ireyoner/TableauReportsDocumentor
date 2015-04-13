@@ -35,8 +35,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
-    <Reference Include="DocX">
-      <HintPath>..\packages\DocX.1.0.0.13\lib\net40\DocX.dll</HintPath>
+    <Reference Include="DocX, Version=1.0.1.13, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Haros\Desktop\ProjectRoche\DocX.dll</HintPath>
     </Reference>
     <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="ReachFramework" />

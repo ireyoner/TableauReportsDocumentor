@@ -60,7 +60,10 @@ namespace TableauReportsDocumentor.Export_Converters
 
         private DocX CreateSection(DocX document, XmlNode section)
         {
+            
             var p = document.InsertParagraph(section.SelectSingleNode("title").InnerText);
+            p.AppendLine("test");
+           
 
             foreach (XmlNode item in section.SelectNodes("content/*"))
             {
@@ -83,7 +86,7 @@ namespace TableauReportsDocumentor.Export_Converters
 
         private DocX CreateSubSection(DocX document, XmlNode subSection)
         {
-            var p = document.InsertParagraph(subSection.SelectSingleNode("title").InnerText);
+            var p = document.InsertParagraph(subSection.SelectSingleNode("title").InnerText).Heading(HeadingType.Heading2);
 
             foreach (XmlNode item in subSection.SelectNodes("content/*"))
             {
