@@ -47,7 +47,7 @@ namespace TableauReportsDocumentor.Export_Converters
             XmlNode root = exportSource.DocumentElement;
             DocX document = DocX.Create(exportFileName);
             Paragraph p = document.InsertParagraph();
-            p.AppendLine(root.SelectSingleNode("title").InnerText);
+            p.AppendLine(root.SelectSingleNode("title").InnerText).Heading(HeadingType.Heading1);
 
             foreach (XmlNode section in root.SelectNodes("//section"))
             {
@@ -61,8 +61,8 @@ namespace TableauReportsDocumentor.Export_Converters
         private DocX CreateSection(DocX document, XmlNode section)
         {
             
-            var p = document.InsertParagraph(section.SelectSingleNode("title").InnerText);
-            p.AppendLine("test");
+            var p = document.InsertParagraph(section.SelectSingleNode("title").InnerText).Heading(HeadingType.Heading2);
+            //p.AppendLine("test");
            
 
             foreach (XmlNode item in section.SelectNodes("content/*"))
@@ -86,7 +86,7 @@ namespace TableauReportsDocumentor.Export_Converters
 
         private DocX CreateSubSection(DocX document, XmlNode subSection)
         {
-            var p = document.InsertParagraph(subSection.SelectSingleNode("title").InnerText).Heading(HeadingType.Heading2);
+            var p = document.InsertParagraph(subSection.SelectSingleNode("title").InnerText).Heading(HeadingType.Heading4);
 
             foreach (XmlNode item in subSection.SelectNodes("content/*"))
             {
@@ -104,19 +104,20 @@ namespace TableauReportsDocumentor.Export_Converters
 
         private DocX CreateText(DocX document, XmlNode text)
         {
-            document.Paragraphs.Last().AppendLine(text.InnerText);
+            document.Paragraphs.Last().AppendLine(text.InnerText).FontSize(10);
             return document;
         }
 
         private DocX CreateTable(DocX document, XmlNode table)
         {
             var p = document.InsertParagraph();
-            p.AppendLine(table.SelectSingleNode("title").InnerText);
+            p.AppendLine(table.SelectSingleNode("title").InnerText).Heading(HeadingType.Heading5);
 
             XmlNodeList headers = table.SelectNodes("header/cell");
             int colCount = headers.Count;
             Table t = document.InsertTable(1, colCount);
             t.Design = TableDesign.ColorfulListAccent1;
+            setAllTableBorders(t, new Border(BorderStyle.Tcbs_single, BorderSize.one, 0, System.Drawing.Color.Black));
             int i;
             for (i = 0; i < colCount; i++)
             {
@@ -136,6 +137,15 @@ namespace TableauReportsDocumentor.Export_Converters
 
             return document;
         }
+
+        private void setAllTableBorders(Table tab, Border border)
+        {
+            foreach (TableBorderType type in Enum.GetValues(typeof(TableBorderType)))
+            {
+                tab.SetBorder(type, border);
+            }
+        }
+        
 
     }
 }
