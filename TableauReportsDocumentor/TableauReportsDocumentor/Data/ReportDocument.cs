@@ -60,7 +60,7 @@ namespace TableauReportsDocumentor.Data
             get
             {
                 if (fileName != null)
-                    return directoryName + fileName;
+                    return directoryName +'\\'+ fileName;
                 else
                     return null;
             }
@@ -116,6 +116,7 @@ namespace TableauReportsDocumentor.Data
         private void SetupReportDocument()
         {
             DirectoryName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            DirectoryName = @"C:\Projects\trd temp files\";
             this.xml = new XmlDocument();
             veh = new ValidationEventHandler(ValidationCallBack);
             this.importTWBandTWBX = new ImportTWBandTWBX();
@@ -155,7 +156,7 @@ namespace TableauReportsDocumentor.Data
 
         public bool SaveAs()
         {
-            return Save(false);
+            return Save(true);
         }
 
         public bool Save()
@@ -171,9 +172,10 @@ namespace TableauReportsDocumentor.Data
                 saveFileDialog.Filter = "Tableau Report Documentator (*.trd)|*.trd|All files (*.*)|*.*";
                 saveFileDialog.DefaultExt = "trd";
                 saveFileDialog.InitialDirectory = directoryName;
-                if (saveFileDialog.ShowDialog() == true)
+                if (saveFileDialog.ShowDialog() ?? false)
                 {
                     this.FullFilePath = saveFileDialog.FileName;
+                    Console.WriteLine(this.FullFilePath);
                     this.xml.Save(this.FullFilePath);
                     return true;
                 }
@@ -217,7 +219,10 @@ namespace TableauReportsDocumentor.Data
 
         public bool SaveFromString(String stringXml)
         {
-            return false;
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(stringXml);
+            this.Xml = doc;
+            return true;
         }
 
         public bool ValideteXML()

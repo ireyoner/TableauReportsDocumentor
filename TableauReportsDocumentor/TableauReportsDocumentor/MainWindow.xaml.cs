@@ -20,6 +20,7 @@ using TableauReportsDocumentor.Export_Converters;
 using TableauReportsDocumentor.Modules.ExportModule;
 using TableauReportsDocumentor.Modules.ImportModule;
 using TableauReportsDocumentor.Data;
+using ICSharpCode.AvalonEdit.Folding;
 
 namespace TableauReportsDocumentor
 {
@@ -37,6 +38,9 @@ namespace TableauReportsDocumentor
         private Import Importer { get { return importer; } }
         private ReportDocument Document { get { return document; } set { document = value; } }
 
+        private FoldingManager foldingManager;
+        private XmlFoldingStrategy foldingStrategy;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -53,6 +57,8 @@ namespace TableauReportsDocumentor
                     ImportM.IsEnabled = false;
                 }
                 Document = new ReportDocument();
+                foldingManager = FoldingManager.Install(outputTest.TextArea);
+                foldingStrategy = new XmlFoldingStrategy();
             }
             catch (Exception e2)
             {
@@ -116,6 +122,32 @@ namespace TableauReportsDocumentor
         private void WriteDocument()
         {
             outputTest.Text = Document.GetAsString();
+        }
+
+        private void SaveAs(object sender, RoutedEventArgs e)
+        {
+            Document.SaveAs();
+        }
+
+        private void Close(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void EditorRapaint(object sender, EventArgs e)
+        {
+            foldingStrategy.UpdateFoldings(foldingManager, outputTest.Document);
+            try
+            {
+                document.SaveFromString(outputTest.Text);
+                statusLabel.Content = "Document ok.";
+                statusLabel.Background = Brushes.Green;
+            }
+            catch (Exception e2)
+            {
+                statusLabel.Content = e2.Message;
+                statusLabel.Background = Brushes.Red;
+            }
         }
 
     }

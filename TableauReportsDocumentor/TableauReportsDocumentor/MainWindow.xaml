@@ -8,29 +8,27 @@
         Title="Tableau Reports Documentor" WindowState="Maximized"
         Icon="Resources/dragon.ico">
     <Window.CommandBindings>
-        <CommandBinding Command="Open"
-        Executed="Open" />
-        <CommandBinding Command="Save"
-        Executed="Save" />
+        <CommandBinding Command="Open" Executed="Open" />
+        <CommandBinding Command="Save" Executed="Save" />
+        <CommandBinding Command="SaveAs" Executed="SaveAs"/>
+        <CommandBinding Command="Close" Executed="Close"/>
     </Window.CommandBindings>
-    <!--
-
     <Window.InputBindings>
-        <KeyBinding Command="Help" Key="H" Modifiers="Ctrl"/>
-        <MouseBinding Command="Help" MouseAction="LeftDoubleClick" />
-    </Window.InputBindings>-->
+        <KeyBinding Key="S" Modifiers="Ctrl+Shift" Command="SaveAs"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="28"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" IsMainMenu="True">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open file" Command="Open"/>
-                <MenuItem Header="_Save file" Command="Save"/>
-                <MenuItem Header="_Close" Command="Close"/>
+                <MenuItem Command="Open"/>
+                <MenuItem Command="Save"/>
+                <MenuItem Command="SaveAs" InputGestureText="Ctrl+Shift+S"/>
+                <MenuItem Command="Close"  InputGestureText="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Header="_Cut" Command="Cut"/>
@@ -38,22 +36,21 @@
                 <MenuItem Header="_Paste" Command="Paste"/>
             </MenuItem>
             <MenuItem Header="_Import" Name="ImportM"/>
+            <!--<MenuItem Header="_View" />-->
             <MenuItem Header="_Export" Name="ExportM"/>
-            <MenuItem Header="_View" />
             <MenuItem Header="_Settings" Click="SettingsWndShow" />
             <MenuItem Header="_About" Click="AboutWndShow" />
         </Menu>
         <ToolBarPanel  Grid.Row="1">
-            <ToolBarTray MaxHeight="28">
-                <ToolBar ClipToBounds="False" MinWidth="40">
-                    <!--<Button Content="Import" Click="ImportButton_Click" Name="ImportButton"/>-->
+            <ToolBarTray>
+                <ToolBar ClipToBounds="True">
                     <Button Click="Open" Content="Open" />
                     <Button Click="Save" Content="Save" />
                 </ToolBar>
-                <ToolBar  Name="ExportTB" ClipToBounds="False" MinWidth="40">
+                <ToolBar  Name="ExportTB" ClipToBounds="True">
                     <Label Content="Export:"/>
                 </ToolBar>
-                <ToolBar ClipToBounds="False" MinWidth="40">
+                <ToolBar ClipToBounds="True">
                     <Button Command="Cut" Content="Cut" />
                     <Button Command="Copy" Content="Copy" />
                     <Button Command="Paste" Content="Paste" />
@@ -61,15 +58,28 @@
             </ToolBarTray>
         </ToolBarPanel>
         <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="5*"/>
-            </Grid.ColumnDefinitions>
-            <TreeView Name="DocumentOutlineTree" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-            <TextBox  Name="outputTest" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
+            <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TabItem Header="Tree">
+                    <TreeView Name="DocumentTree" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </TabItem>
+                <TabItem Header="XML">
+                    <avalonEdit:TextEditor Name="outputTest" 
+                                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                   xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                                   FontFamily="Consolas"
+                                   SyntaxHighlighting="XmlDoc"
+                                   FontSize="10pt"
+                                   TextChanged="EditorRapaint"
+                                   ShowLineNumbers="True"
+                                   WordWrap="True"
+                                   />
+                </TabItem>
+            </TabControl>
         </Grid>
-        <StatusBar Name="statusBar" Grid.Row="3"/>
+        <StatusBar Name="statusBar" Grid.Row="3">
+            <StatusBarItem HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Label Name="statusLabel" FontSize="10" FontFamily="Consolas" Content="Status" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

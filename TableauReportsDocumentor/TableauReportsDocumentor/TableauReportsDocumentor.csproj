@@ -39,6 +39,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libs\DocX.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="ReachFramework" />
     <Reference Include="System" />

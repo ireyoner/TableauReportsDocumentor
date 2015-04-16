@@ -3,6 +3,7 @@
     xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl"
 >
   <xsl:output method="xml" indent="yes" omit-xml-declaration="yes" />
+  <!--<xsl:strip-space elements="*"/>-->
 
   <xsl:template match="/workbook">
     <report xsi:noNamespaceSchemaLocation="ImportValidator.xsd" 
