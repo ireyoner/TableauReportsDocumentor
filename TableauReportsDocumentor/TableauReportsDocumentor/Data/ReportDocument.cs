@@ -249,6 +249,20 @@ namespace TableauReportsDocumentor.Data
             Console.WriteLine(message);
             throw new Exception("Document validation exception!\n" + message);
         }
- 
+
+
+        public XmlDocument GetExportXml()
+        {
+            Console.WriteLine("e1:");
+            XmlDocument doc = (XmlDocument)this.Xml.Clone();
+            var elem = doc.SelectNodes("//node()[@visible='False']");
+            while ( elem.Count > 0)
+            {
+                Console.WriteLine("e:"+elem[0].Name+" ");
+                elem[0].ParentNode.RemoveChild(elem[0]);
+                elem = doc.SelectNodes("//node()[@visible='False']");
+            }
+            return doc;
+        }
     }
 }

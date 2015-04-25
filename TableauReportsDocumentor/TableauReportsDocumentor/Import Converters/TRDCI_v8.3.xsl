@@ -19,7 +19,7 @@
   </xsl:template>
 
   <xsl:template match="datasources" >
-    <section>
+    <section visible="True">
       <title>
         <xsl:value-of select="local-name(.)"/>
       </title>
@@ -31,12 +31,12 @@
   </xsl:template>
 
   <xsl:template match="datasource" >
-    <subsection>
+    <subsection visible="True">
       <title>
         <xsl:value-of select="@name"/>
       </title>
       <content>
-        <text>Caption: <xsl:value-of select="@caption"/></text>
+        <text visible="True">Caption: <xsl:value-of select="@caption"/></text>
         <xsl:apply-templates select="connection/metadata-records"/>
         <xsl:apply-templates select="." mode="measures_table"/>
         <xsl:apply-templates select="." mode="dimensions_table"/>
@@ -45,7 +45,7 @@
   </xsl:template>
  
   <xsl:template match="*" mode="measures_table">
-    <table>
+    <table visible="True">
       <title>measures</title>
       <header>
         <cell>name</cell>
@@ -71,7 +71,7 @@
   </xsl:template>
   
   <xsl:template match="*" mode="dimensions_table">
-    <table>
+    <table visible="True">
       <title>dimensions</title>
       <header>
         <cell>dimension</cell>
@@ -89,7 +89,7 @@
   </xsl:template>
   
   <xsl:template match="*" mode="calculations_table">
-    <table>
+    <table visible="True">
       <title>calculations</title>
       <header>
         <cell>name</cell>
@@ -127,7 +127,7 @@
   </xsl:template>
 
   <xsl:template match="metadata-records" >
-    <table>
+    <table visible="True">
       <title>metadata-records</title>
       <header>
         <cell>Table name</cell>
@@ -171,12 +171,12 @@
   </xsl:template>
 
   <xsl:template match="worksheet" >
-    <section>
+    <section visible="True">
       <title>
         <xsl:value-of select="@name"/>
       </title>
       <content>
-        <text>Title: <xsl:apply-templates select="layout-options/title"/></text>
+        <text visible="True">Title: <xsl:apply-templates select="layout-options/title"/></text>
         <xsl:apply-templates select="table/view/datasource-dependencies" mode="calculations_table"/>
         <xsl:apply-templates select="table/view/datasource-dependencies" mode="measures_table"/>
         <xsl:apply-templates select="table/view/datasource-dependencies" mode="dimensions_table"/>
@@ -187,7 +187,7 @@
   </xsl:template>
 
   <xsl:template match="style-rule[@element='quick-filter']">
-    <table>
+    <table visible="True">
       <title>quick-filter</title>
       <header>
         <cell>Filtr</cell>

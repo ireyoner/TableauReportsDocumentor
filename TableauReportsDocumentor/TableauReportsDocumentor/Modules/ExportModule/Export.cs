@@ -154,7 +154,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
                     if (exporters.ContainsKey(fileExtinsion))
                     {
                         exporter = exporters[fileExtinsion].Item1;
-                        return exporter.Export(saveFileDialog.FileName, document.Xml);
+                        return exporter.Export(saveFileDialog.FileName, document.GetExportXml());
                     }
                     else if (exporters.ContainsKey(fallbackExtension))
                     {

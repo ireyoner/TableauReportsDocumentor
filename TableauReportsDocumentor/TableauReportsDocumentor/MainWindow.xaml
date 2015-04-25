@@ -3,10 +3,112 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:local="clr-namespace:TableauReportsDocumentor"
         mc:Ignorable="d" 
         x:Class="TableauReportsDocumentor.MainWindow"
         Title="Tableau Reports Documentor" WindowState="Maximized"
         Icon="Resources/dragon.ico">
+    <Window.Resources>
+        <local:XElementConverter x:Key="Converter"/>
+
+        <DataTemplate DataType="cell">
+            <TextBox Text="{Binding XPath=text(), Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200" MaxWidth="200"/>
+        </DataTemplate>
+
+        <DataTemplate DataType="header">
+            <StackPanel Orientation="Horizontal"  MinWidth="200">
+                <TextBlock Text=" Columns:" MinWidth="60"/>
+                <ItemsControl ItemsSource="{Binding Converter={StaticResource Converter}}"
+                              HorizontalAlignment="Stretch">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" MinWidth="200"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="row">
+            <StackPanel Orientation="Horizontal"  MinWidth="200">
+                <TextBlock Text=" Row:" MinWidth="40"/>
+                <ItemsControl ItemsSource="{Binding Converter={StaticResource Converter}}" 
+                              HorizontalAlignment="Stretch">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"  MinWidth="200"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </StackPanel>
+        </DataTemplate>
+
+        <HierarchicalDataTemplate DataType="rows" ItemsSource="{Binding Converter={StaticResource Converter}}">
+            <StackPanel Orientation="Horizontal"  MinWidth="200">
+                <TextBlock Text=" Rows:" MinWidth="60"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate DataType="table" ItemsSource="{Binding Converter={StaticResource Converter}}">
+            <StackPanel Orientation="Horizontal"  MinWidth="200">
+                <CheckBox IsChecked="{Binding XPath=@visible, Mode=TwoWay}" Checked="TreeElementModified" Unchecked="TreeElementModified"></CheckBox>
+                <TextBlock Text=" Table:" MinWidth="40"/>
+                <TextBox Text="{Binding XPath=title, Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate DataType="text" ItemsSource="{Binding Converter={StaticResource Converter}}">
+            <StackPanel Orientation="Horizontal"  MinWidth="200">
+                <CheckBox IsChecked="{Binding XPath=@visible, Mode=TwoWay}" Checked="TreeElementModified" Unchecked="TreeElementModified"></CheckBox>
+                <TextBlock Text=" Text:" MinWidth="40"/>
+                <TextBox Text="{Binding XPath=text(), Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate DataType="subsection" ItemsSource="{Binding Converter={StaticResource Converter}}">
+            <StackPanel Orientation="Horizontal"  MinWidth="200">
+                <CheckBox IsChecked="{Binding XPath=@visible, Mode=TwoWay}" Checked="TreeElementModified" Unchecked="TreeElementModified"></CheckBox>
+                <TextBlock Text=" Subsection: " MinWidth="60"/>
+                <TextBox Text="{Binding XPath=title, Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate DataType="section" ItemsSource="{Binding Converter={StaticResource Converter}}">
+            <StackPanel Orientation="Horizontal"  MinWidth="200">
+                <CheckBox IsChecked="{Binding XPath=@visible, Mode=TwoWay}" Checked="TreeElementModified" Unchecked="TreeElementModified" />
+                <TextBlock Text=" Section: " MinWidth="60"/>
+                <TextBox Text="{Binding XPath=title, Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate DataType="report"  ItemsSource="{Binding Converter={StaticResource Converter}}">
+            <StackPanel Orientation="Horizontal"  MinWidth="200" DataContext="{Binding XPath=.}">
+                <TextBlock Text=" Report: " MinWidth="60"/>
+                <TextBox Text="{Binding XPath=title, Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+
+        <!-- This will contain the initial XML-data as well as any other file the user may pick at runtime. -->
+        <XmlDataProvider x:Key="xmlDP" XPath="report">
+        </XmlDataProvider>
+
+        <!-- The following two styles allow for easy expanding/collapsing of all nodes. -->
+        <Style x:Key="TV_AllExpanded"  TargetType="{x:Type TreeView}">
+            <Style.Resources>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style x:Key="TV_AllCollapsed" TargetType="{x:Type TreeView}">
+            <Style.Resources>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="False" />
+                </Style>
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="Open" />
         <CommandBinding Command="Save" Executed="Save" />
@@ -59,10 +161,14 @@
         </ToolBarPanel>
         <Grid Grid.Row="2">
             <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TabItem Header="Tree">
-                    <TreeView Name="DocumentTree" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <TabItem Header="Tree" GotFocus="TreeFocused" >
+                    <TreeView Name="DocumentTree" 
+                              ItemsSource="{Binding Source={StaticResource xmlDP}}"
+                              Margin="5"
+                              HorizontalAlignment="Stretch" 
+                              VerticalAlignment="Stretch"/>
                 </TabItem>
-                <TabItem Header="XML">
+                <TabItem Header="XML" GotFocus="EditorFocused">
                     <avalonEdit:TextEditor Name="outputTest" 
                                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"

@@ -21,6 +21,7 @@ using TableauReportsDocumentor.Modules.ExportModule;
 using TableauReportsDocumentor.Modules.ImportModule;
 using TableauReportsDocumentor.Data;
 using ICSharpCode.AvalonEdit.Folding;
+using System.Globalization;
 
 namespace TableauReportsDocumentor
 {
@@ -40,6 +41,7 @@ namespace TableauReportsDocumentor
 
         private FoldingManager foldingManager;
         private XmlFoldingStrategy foldingStrategy;
+        private XmlDataProvider dp;
 
         public MainWindow()
         {
@@ -121,6 +123,10 @@ namespace TableauReportsDocumentor
 
         private void WriteDocument()
         {
+            dp = (XmlDataProvider)this.FindResource("xmlDP");
+            //... and assign the XDoc to it, using the XDoc's root.
+            dp.Document = Document.Xml;
+            dp.XPath = "*";
             outputTest.Text = Document.GetAsString();
         }
 
@@ -150,5 +156,43 @@ namespace TableauReportsDocumentor
             }
         }
 
+        private void TreeElementModified(object sender, RoutedEventArgs e)
+        {
+            Document.Xml = dp.Document;
+        }
+
+        private void TreeFocused(object sender, RoutedEventArgs e)
+        {
+            dp.Document = Document.Xml;
+        }
+
+        private void EditorFocused(object sender, RoutedEventArgs e)
+        {
+            outputTest.Text = Document.GetAsString();
+        }
+
     }
+
+    public class XElementConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            XmlElement element = value as XmlElement;
+            if (element == null) return null;
+            return element.SelectNodes("sections/section" +
+                                       "|subsections/subsection" +
+                                       "|content/text" +
+                                       "|content/table" +
+                                       "|header" +
+                                       "|cell" +
+                                       "|rows" +
+                                       "|row");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }
