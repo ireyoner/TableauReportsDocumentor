@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using System.IO.Compression;
+using TableauReportsDocumentor.Data;
 
 //using System.IO.Compression.FileSystem;
 
@@ -16,11 +17,13 @@ namespace TableauReportsDocumentor.Modules.ImportModule
 {
     class ImportTWBandTWBX : ImportInterface
     {
-        private XmlDocument ImportTWB(string filename)
+        private ImportedDocument ImportTWB(string filename)
         {
             if (filename.EndsWith(".twb"))
             {
-                return ImportTWBfromXPathDocument(new XPathDocument(filename));
+                XmlDocument od= new XmlDocument();
+                od.Load(filename);
+                return new ImportedDocument(od,ImportTWBfromXPathDocument(new XPathDocument(filename)));
             }
             return null;
         }
@@ -39,7 +42,7 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             return doc;
         }
 
-        private XmlDocument ImportTWBX(string filename)
+        private ImportedDocument ImportTWBX(string filename)
         {
             if (filename.EndsWith(".twbx"))
             {
@@ -52,7 +55,9 @@ namespace TableauReportsDocumentor.Modules.ImportModule
                         {
                             using (Stream appManifestFileStream = entry.Open())
                             {
-                                return ImportTWBfromXPathDocument(new XPathDocument(appManifestFileStream));
+                                XmlDocument od = new XmlDocument();
+                                od.Load(appManifestFileStream);
+                                return new ImportedDocument(od, ImportTWBfromXPathDocument(new XPathDocument(appManifestFileStream)));
                             }
                         }
                     }
@@ -61,7 +66,7 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             return null;
         }
 
-        public XmlDocument ImportTableauWorkbook(string filename)
+        public ImportedDocument ImportTableauWorkbook(string filename)
         {
             if (filename.EndsWith(".twbx"))
             {
@@ -84,7 +89,7 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             get { return null; }
         }
 
-        public XmlDocument Import()
+        public ImportedDocument Import()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = false;

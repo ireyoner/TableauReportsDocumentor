@@ -128,6 +128,7 @@ namespace TableauReportsDocumentor
             dp.Document = Document.Xml;
             dp.XPath = "*";
             outputTest.Text = Document.GetAsString();
+            outputOriginal.Text = Document.GetOriginalAsString();
         }
 
         private void SaveAs(object sender, RoutedEventArgs e)
@@ -163,7 +164,11 @@ namespace TableauReportsDocumentor
 
         private void TreeFocused(object sender, RoutedEventArgs e)
         {
-            dp.Document = Document.Xml;
+            try
+            {
+                dp.Document = Document.Xml;
+            }
+            catch (NullReferenceException e2) { }
         }
 
         private void EditorFocused(object sender, RoutedEventArgs e)
@@ -185,6 +190,7 @@ namespace TableauReportsDocumentor
                                        "|content/table" +
                                        "|header" +
                                        "|cell" +
+                                       "|hcell" +
                                        "|rows" +
                                        "|row");
         }

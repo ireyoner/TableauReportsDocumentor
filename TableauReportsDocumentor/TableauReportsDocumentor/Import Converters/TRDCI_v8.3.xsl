@@ -48,9 +48,9 @@
     <table visible="True">
       <title>measures</title>
       <header>
-        <cell>name</cell>
-        <cell>caption</cell>
-        <cell>formula</cell>
+        <hcell visible="True">name_tableau</hcell>
+        <hcell visible="True">name</hcell>
+        <hcell visible="True">formula</hcell>
       </header>
       <rows>
         <xsl:for-each select="column[@role='measure']">
@@ -74,7 +74,7 @@
     <table visible="True">
       <title>dimensions</title>
       <header>
-        <cell>dimension</cell>
+        <hcell visible="True">dimension</hcell>
       </header>
       <rows>
         <xsl:for-each select="column[@role='dimension']">
@@ -92,12 +92,12 @@
     <table visible="True">
       <title>calculations</title>
       <header>
-        <cell>name</cell>
-        <cell>caption</cell>
-        <cell>type</cell>
-        <cell>role</cell>
-        <cell>datatype</cell>
-        <cell>formula</cell>
+        <hcell visible="True">name</hcell>
+        <hcell visible="True">caption</hcell>
+        <hcell visible="True">type</hcell>
+        <hcell visible="True">role</hcell>
+        <hcell visible="True">datatype</hcell>
+        <hcell visible="True">formula</hcell>
       </header>
       <rows>
       <xsl:for-each select="column[starts-with(@name, '[Calculation_')]">
@@ -130,11 +130,11 @@
     <table visible="True">
       <title>metadata-records</title>
       <header>
-        <cell>Table name</cell>
-        <cell>Column name</cell>
-        <cell>local-type</cell>
-        <cell>aggregation</cell>
-        <cell>contains-null</cell>
+        <hcell visible="True">Table name</hcell>
+        <hcell visible="True">Column name</hcell>
+        <hcell visible="True">local-type</hcell>
+        <hcell visible="True">aggregation</hcell>
+        <hcell visible="True">contains-null</hcell>
       </header>
       <rows>
       <xsl:for-each select="metadata-record[@class='column' 
@@ -190,7 +190,7 @@
     <table visible="True">
       <title>quick-filter</title>
       <header>
-        <cell>Filtr</cell>
+        <hcell visible="True">Filtr</hcell>
       </header>
       <rows>
         <xsl:for-each select="format">

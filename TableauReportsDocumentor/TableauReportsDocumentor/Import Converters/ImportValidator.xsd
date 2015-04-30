@@ -94,7 +94,15 @@
       <xs:element name="header">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="cell" type="xs:string" maxOccurs="unbounded"/>
+            <xs:element name="hcell" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:string">
+                    <xs:attributeGroup ref="AG_reportItem"/>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>

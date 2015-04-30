@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media.Imaging;
 using System.Xml;
+using TableauReportsDocumentor.Data;
 
 namespace TableauReportsDocumentor.Modules.ImportModule
 {
@@ -16,7 +17,7 @@ namespace TableauReportsDocumentor.Modules.ImportModule
         BitmapFrame MenuItemIcone { get; }
 
         // Method called when button or menu item is clicked
-        XmlDocument Import();
+        ImportedDocument Import();
 
     }
 }

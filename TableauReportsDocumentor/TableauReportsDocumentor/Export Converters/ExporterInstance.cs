@@ -106,11 +106,11 @@ namespace TableauReportsDocumentor.Export_Converters
             TableInit(title, table);
 
             var header = table.SelectSingleNode("header");
-            var headerCells = header.SelectNodes("cell");
+            var headerCells = header.SelectNodes("hcell");
             int colCount = headerCells.Count;
 
             TableHeaderStart(title, header, colCount);
-            foreach (XmlNode cell in header.SelectNodes("cell"))
+            foreach (XmlNode cell in header.SelectNodes("hcell"))
             {
                 TableHeaderCell(title, cell);
             }

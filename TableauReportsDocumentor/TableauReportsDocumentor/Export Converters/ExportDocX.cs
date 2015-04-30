@@ -113,7 +113,7 @@ namespace TableauReportsDocumentor.Export_Converters
             var p = document.InsertParagraph();
             p.AppendLine(table.SelectSingleNode("title").InnerText).Heading(HeadingType.Heading5).Color(System.Drawing.Color.Black);
 
-            XmlNodeList headers = table.SelectNodes("header/cell");
+            XmlNodeList headers = table.SelectNodes("header/hcell");
             int colCount = headers.Count;
             Table t = document.InsertTable(1, colCount);
             //t.Design = TableDesign.ColorfulListAccent1;

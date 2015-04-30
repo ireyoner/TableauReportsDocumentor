@@ -74,6 +74,7 @@
     <Compile Include="AppWindows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ImportModule\ImportedDocument.cs" />
     <Compile Include="Export Converters\ExportDocX.cs" />
     <Compile Include="Export Converters\ExportCSV.cs" />
     <Compile Include="Export Converters\ExporterInstance.cs" />

@@ -18,6 +18,8 @@ namespace TableauReportsDocumentor.Data
         private String directoryName;
         private ImportTWBandTWBX importTWBandTWBX;
         private ValidationEventHandler veh;
+        private ImportedDocument xmlDocument;
+        public XmlDocument original { get; set; }
 
         public String FileName
         {
@@ -113,6 +115,15 @@ namespace TableauReportsDocumentor.Data
             this.Xml = xmlDocument;
         }
 
+        public ReportDocument(ImportedDocument xmlDocument)
+        {
+            // TODO: Complete member initialization
+            SetupReportDocument();
+            this.xmlDocument = xmlDocument;
+            this.Xml = xmlDocument.Converted;
+            this.original = xmlDocument.Original;
+        }
+
         private void SetupReportDocument()
         {
             DirectoryName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -137,7 +148,9 @@ namespace TableauReportsDocumentor.Data
 
                 if (filename.EndsWith(".twb") || filename.EndsWith(".twbx"))
                 {
-                    this.Xml = importTWBandTWBX.ImportTableauWorkbook(filename);
+                    this.xmlDocument = importTWBandTWBX.ImportTableauWorkbook(filename);
+                    this.Xml = this.xmlDocument.Converted;
+                    this.original = this.xmlDocument.Original;
                 }
                 else
                 {
@@ -212,7 +225,40 @@ namespace TableauReportsDocumentor.Data
                 String FormattedXML = sReader.ReadToEnd();
 
                 return FormattedXML;
-            }else{
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public String GetOriginalAsString()
+        {
+            if (Xml != null)
+            {
+                MemoryStream mStream = new MemoryStream();
+                XmlTextWriter writer = new XmlTextWriter(mStream, Encoding.Unicode);
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 4;
+                writer.QuoteChar = '\'';
+                this.original.WriteContentTo(writer);
+                writer.Flush();
+                mStream.Flush();
+
+                // Have to rewind the MemoryStream in order to read
+                // its contents.
+                mStream.Position = 0;
+
+                // Read MemoryStream contents into a StreamReader.
+                StreamReader sReader = new StreamReader(mStream);
+
+                // Extract the text from the StreamReader.
+                String FormattedXML = sReader.ReadToEnd();
+
+                return FormattedXML;
+            }
+            else
+            {
                 return "";
             }
         }
