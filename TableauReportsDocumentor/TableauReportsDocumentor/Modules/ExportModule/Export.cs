@@ -119,7 +119,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             exportMenu.Items.Add(menuItem);
         }
 
-        public bool ExportDocument(object sender, RoutedEventArgs e, ReportDocument document)
+        public bool ExportDocument(object sender, RoutedEventArgs e, ReportDocumentMenager document)
         {
             ExportInterface exporter;
             int saveIndex = noSaveExporterIndex;
@@ -159,7 +159,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
                     else if (exporters.ContainsKey(fallbackExtension))
                     {
                         exporter = exporters[fallbackExtension].Item1;
-                        var OK = exporter.Export(saveFileDialog.FileName, document.Xml);
+                        var OK = exporter.Export(saveFileDialog.FileName, document.Content.ConvertedXml);
                         if (OK)
                         {
                             document.FullFilePath = saveFileDialog.FileName;
@@ -171,7 +171,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             }
             else
             {
-                return exporter.Export(null, document.Xml);
+                return exporter.Export(null, document.Content.ConvertedXml);
             }
         }
     }

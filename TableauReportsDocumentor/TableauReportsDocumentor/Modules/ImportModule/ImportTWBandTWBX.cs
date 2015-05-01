@@ -17,32 +17,47 @@ namespace TableauReportsDocumentor.Modules.ImportModule
 {
     class ImportTWBandTWBX : ImportInterface
     {
-        private ImportedDocument ImportTWB(string filename)
+        private String original;
+        public string OriginalReport
+        {
+            get { return original; }
+        }
+
+        private XmlDocument converted;
+        public XmlDocument ConvertedReport
+        {
+            get { return converted; }
+        }
+
+        private Boolean ImportTWB(string filename)
         {
             if (filename.EndsWith(".twb"))
             {
-                XmlDocument od= new XmlDocument();
-                od.Load(filename);
-                return new ImportedDocument(od,ImportTWBfromXPathDocument(new XPathDocument(filename)));
+                StreamReader streamReader = new StreamReader(filename);
+                original = streamReader.ReadToEnd();
+                streamReader.Close();
+                return ImportTWBfromXPathDocument(new XPathDocument(filename));
             }
-            return null;
+            return false;
         }
 
-        private XmlDocument ImportTWBfromXPathDocument(XPathDocument myXPathDoc)
+        private Boolean ImportTWBfromXPathDocument(XPathDocument myXPathDoc)
         {
-            XmlDocument doc = new XmlDocument();
+
+            converted = new XmlDocument();
 
             XslCompiledTransform myXslTrans = new XslCompiledTransform();
             myXslTrans.Load("../../Import Converters/TRDCI_v8.3.xsl");
 
-            using (XmlWriter writer = doc.CreateNavigator().AppendChild())
+            using (XmlWriter writer = converted.CreateNavigator().AppendChild())
             {
                 myXslTrans.Transform(myXPathDoc, null, writer);
+
             }
-            return doc;
+            return true;
         }
 
-        private ImportedDocument ImportTWBX(string filename)
+        private Boolean ImportTWBX(string filename)
         {
             if (filename.EndsWith(".twbx"))
             {
@@ -55,19 +70,21 @@ namespace TableauReportsDocumentor.Modules.ImportModule
                         {
                             using (Stream appManifestFileStream = entry.Open())
                             {
-                                XmlDocument od = new XmlDocument();
-                                od.Load(appManifestFileStream);
-                                return new ImportedDocument(od, ImportTWBfromXPathDocument(new XPathDocument(appManifestFileStream)));
+                                StreamReader streamReader = new StreamReader(appManifestFileStream);
+                                original = streamReader.ReadToEnd();
+                                streamReader.Close();
+                                return ImportTWBfromXPathDocument(new XPathDocument(appManifestFileStream));
                             }
                         }
                     }
                 }
             }
-            return null;
+            return false;
         }
 
-        public ImportedDocument ImportTableauWorkbook(string filename)
+        public Boolean ImportTableauWorkbook(string filename)
         {
+            original = null;
             if (filename.EndsWith(".twbx"))
             {
                 return ImportTWBX(filename);
@@ -76,7 +93,7 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             {
                 return ImportTWB(filename);
             }
-            return null;
+            return false;
         }
 
         public string MenuItemText
@@ -89,7 +106,7 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             get { return null; }
         }
 
-        public ImportedDocument Import()
+        public Boolean Import()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = false;
@@ -99,7 +116,10 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             {
                 return ImportTableauWorkbook(openFileDialog.FileName);
             }
-            return null;
+            return false;
         }
+
+
+
     }
 }

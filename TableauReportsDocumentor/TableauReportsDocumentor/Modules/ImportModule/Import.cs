@@ -61,7 +61,7 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             importMenu.Items.Add(menuItem);
         }
 
-        public ReportDocument ImportDocument(object sender, RoutedEventArgs e)
+        public ReportDocumentMenager ImportDocument(object sender, RoutedEventArgs e)
         {
             ImportInterface importer;
             if (sender.GetType() == typeof(MenuItem))
@@ -74,10 +74,12 @@ namespace TableauReportsDocumentor.Modules.ImportModule
                 return null;
             }
 
-            var xmlDocument = importer.Import();
+            importer.Import();
+
+            var xmlDocument = new ReportContent(importer.OriginalReport,importer.ConvertedReport);
             if (xmlDocument != null)
             {
-                return new ReportDocument(xmlDocument);
+                return new ReportDocumentMenager(xmlDocument);
             }
             return null;
 

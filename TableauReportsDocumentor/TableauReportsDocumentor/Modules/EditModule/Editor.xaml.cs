@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TableauReportsDocumentor.Data;
 
 namespace TableauReportsDocumentor.Modules.EditModule
 {
@@ -20,6 +21,24 @@ namespace TableauReportsDocumentor.Modules.EditModule
     /// </summary>
     public partial class Editor : UserControl
     {
+        public ReportContent Report
+        {
+            set
+            {
+                RTV.Report = value;
+                RXV.Report = value;
+                ROV.Report = value;
+            }
+        }
+
+        public Label statusLabel
+        {
+            set
+            {
+                RXV.statusLabel = value;
+            }
+        }
+
         public Editor()
         {
             InitializeComponent();

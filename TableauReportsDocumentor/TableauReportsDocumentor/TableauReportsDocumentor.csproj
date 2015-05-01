@@ -74,11 +74,21 @@
     <Compile Include="AppWindows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\ImportModule\ImportedDocument.cs" />
+    <Compile Include="Data\ReportContent.cs" />
     <Compile Include="Export Converters\ExportDocX.cs" />
     <Compile Include="Export Converters\ExportCSV.cs" />
     <Compile Include="Export Converters\ExporterInstance.cs" />
     <Compile Include="Export Converters\TrdExport.cs" />
+    <Compile Include="Modules\EditModule\ReportOriginalView.xaml.cs">
+      <DependentUpon>ReportOriginalView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\EditModule\ReportTreeView.xaml.cs">
+      <DependentUpon>ReportTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\EditModule\ReportXmlView.xaml.cs">
+      <DependentUpon>ReportXmlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\EditModule\XElementConverter.cs" />
     <Compile Include="Modules\ImportModule\ImportInterface.cs" />
     <Compile Include="Modules\ImportModule\ImportTWBandTWBX.cs" />
     <Compile Include="AppWindows\About.cs">
@@ -87,13 +97,7 @@
     <Compile Include="AppWindows\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Settings.cs" />
-    <Compile Include="Data\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Data\ReportDocument.cs" />
+    <Compile Include="Data\ReportDocumentMenager.cs" />
     <Page Include="AppWindows\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -112,6 +116,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Modules\EditModule\Editor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\EditModule\ReportOriginalView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\EditModule\ReportTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\EditModule\ReportXmlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,10 +167,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Data\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

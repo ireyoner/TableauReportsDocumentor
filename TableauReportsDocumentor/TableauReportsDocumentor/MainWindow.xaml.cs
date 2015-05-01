@@ -18,10 +18,12 @@ using System.Xml;
 using TableauReportsDocumentor.AppWindows;
 using TableauReportsDocumentor.Export_Converters;
 using TableauReportsDocumentor.Modules.ExportModule;
+using TableauReportsDocumentor.Modules.EditModule;
 using TableauReportsDocumentor.Modules.ImportModule;
 using TableauReportsDocumentor.Data;
 using ICSharpCode.AvalonEdit.Folding;
 using System.Globalization;
+
 
 namespace TableauReportsDocumentor
 {
@@ -33,19 +35,16 @@ namespace TableauReportsDocumentor
 
         private Export exporter;
         private Import importer;
-        private ReportDocument document;
+        private ReportDocumentMenager document;
         
         private Export Exporter { get { return exporter; } }
         private Import Importer { get { return importer; } }
-        private ReportDocument Document { get { return document; } set { document = value; } }
-
-        private FoldingManager foldingManager;
-        private XmlFoldingStrategy foldingStrategy;
-        private XmlDataProvider dp;
+        private ReportDocumentMenager Document { get { return document; } set { document = value; } }
 
         public MainWindow()
         {
             InitializeComponent();
+            EditorView.statusLabel = statusLabel;
             try
             {
                 importer = new Import(ImportButton_Click, ImportM);
@@ -58,9 +57,7 @@ namespace TableauReportsDocumentor
                 {
                     ImportM.IsEnabled = false;
                 }
-                Document = new ReportDocument();
-                foldingManager = FoldingManager.Install(outputTest.TextArea);
-                foldingStrategy = new XmlFoldingStrategy();
+                Document = new ReportDocumentMenager();
             }
             catch (Exception e2)
             {
@@ -100,15 +97,17 @@ namespace TableauReportsDocumentor
 
         private void Open(object sender, RoutedEventArgs e)
         {
+            Boolean status = false;
             try
             {
-                Document.Open();
+                status = Document.Open();
             }
             catch (Exception e2)
             {
                 MessageBox.Show(e2.Message, "Open error!");
             }
-            WriteDocument();
+            if(status)
+                WriteDocument();
         }
 
         private void SettingsWndShow(object sender, RoutedEventArgs e)
@@ -123,12 +122,7 @@ namespace TableauReportsDocumentor
 
         private void WriteDocument()
         {
-            dp = (XmlDataProvider)this.FindResource("xmlDP");
-            //... and assign the XDoc to it, using the XDoc's root.
-            dp.Document = Document.Xml;
-            dp.XPath = "*";
-            outputTest.Text = Document.GetAsString();
-            outputOriginal.Text = Document.GetOriginalAsString();
+            EditorView.Report = Document.Content;
         }
 
         private void SaveAs(object sender, RoutedEventArgs e)
@@ -141,64 +135,5 @@ namespace TableauReportsDocumentor
             this.Close();
         }
 
-        private void EditorRapaint(object sender, EventArgs e)
-        {
-            foldingStrategy.UpdateFoldings(foldingManager, outputTest.Document);
-            try
-            {
-                document.SaveFromString(outputTest.Text);
-                statusLabel.Content = "Document ok.";
-                statusLabel.Background = Brushes.Green;
-            }
-            catch (Exception e2)
-            {
-                statusLabel.Content = e2.Message;
-                statusLabel.Background = Brushes.Red;
-            }
-        }
-
-        private void TreeElementModified(object sender, RoutedEventArgs e)
-        {
-            Document.Xml = dp.Document;
-        }
-
-        private void TreeFocused(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                dp.Document = Document.Xml;
-            }
-            catch (NullReferenceException e2) { }
-        }
-
-        private void EditorFocused(object sender, RoutedEventArgs e)
-        {
-            outputTest.Text = Document.GetAsString();
-        }
-
     }
-
-    public class XElementConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            XmlElement element = value as XmlElement;
-            if (element == null) return null;
-            return element.SelectNodes("sections/section" +
-                                       "|subsections/subsection" +
-                                       "|content/text" +
-                                       "|content/table" +
-                                       "|header" +
-                                       "|cell" +
-                                       "|hcell" +
-                                       "|rows" +
-                                       "|row");
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }

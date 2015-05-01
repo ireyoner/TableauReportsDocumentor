@@ -17,7 +17,10 @@ namespace TableauReportsDocumentor.Modules.ImportModule
         BitmapFrame MenuItemIcone { get; }
 
         // Method called when button or menu item is clicked
-        ImportedDocument Import();
+        Boolean Import();
+
+        String OriginalReport { get; }
+        XmlDocument ConvertedReport { get; }
 
     }
 }
