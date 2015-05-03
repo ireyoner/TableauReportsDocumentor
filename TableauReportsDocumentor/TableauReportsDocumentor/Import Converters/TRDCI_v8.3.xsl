@@ -166,6 +166,32 @@
     </table>
   </xsl:template>
 
+  <xsl:template match="*" mode="filter" >
+    <table visible="True">
+      <title>filter</title>
+      <header>
+        <hcell visible="True">column</hcell>
+        <hcell visible="True">level</hcell>
+        <hcell visible="True">member</hcell>
+      </header>
+      <rows>
+      <xsl:for-each select="filter">
+          <row>
+            <cell>
+              <xsl:value-of select="@column"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="groupfilter/@level"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="groupfilter/@member"/>
+            </cell>
+          </row>
+      </xsl:for-each>
+      </rows>
+    </table>
+  </xsl:template>
+
   <xsl:template match="worksheets" >
     <xsl:apply-templates select="worksheet"/>
   </xsl:template>
@@ -181,6 +207,7 @@
         <xsl:apply-templates select="table/view/datasource-dependencies" mode="measures_table"/>
         <xsl:apply-templates select="table/view/datasource-dependencies" mode="dimensions_table"/>
         <xsl:apply-templates select="table/style/style-rule[@element='quick-filter']"/>
+        <xsl:apply-templates select="table/view" mode="filter"/>
       </content>
       <subsections/>
     </section>

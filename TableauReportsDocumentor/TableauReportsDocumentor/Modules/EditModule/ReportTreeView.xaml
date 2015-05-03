@@ -10,13 +10,15 @@
         <local:XElementConverter x:Key="Converter"/>
 
         <DataTemplate DataType="cell">
-            <TextBox Text="{Binding XPath=text(), Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200" MaxWidth="200"/>
+            <StackPanel Orientation="Horizontal"  MinWidth="200"  MaxWidth="200">
+                <TextBox Text="{Binding XPath=text(), Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="198" MaxWidth="198"/>
+            </StackPanel>
         </DataTemplate>
 
         <DataTemplate DataType="hcell">
-            <StackPanel Orientation="Horizontal"  MinWidth="200">
+            <StackPanel Orientation="Horizontal"  MinWidth="200"  MaxWidth="200">
                 <CheckBox IsChecked="{Binding XPath=@visible, Mode=TwoWay}" Checked="TreeElementModified" Unchecked="TreeElementModified"></CheckBox>
-                <TextBox Text="{Binding XPath=text(), Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200" MaxWidth="200"/>
+                <TextBox Text="{Binding XPath=text(), Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="185" MaxWidth="185"/>
             </StackPanel>
         </DataTemplate>
 
@@ -80,14 +82,17 @@
 
         <HierarchicalDataTemplate DataType="section" ItemsSource="{Binding Converter={StaticResource Converter}}">
             <StackPanel Orientation="Horizontal"  MinWidth="200">
-                <CheckBox IsChecked="{Binding XPath=@visible, Mode=TwoWay}" Checked="TreeElementModified" Unchecked="TreeElementModified" />
+                <CheckBox IsChecked="{Binding XPath=@visible, Mode=TwoWay}" 
+                          Checked="TreeElementModified" 
+                          Unchecked="TreeElementModified"
+                         />
                 <TextBlock Text=" Section: " MinWidth="60"/>
                 <TextBox Text="{Binding XPath=title, Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200"/>
             </StackPanel>
         </HierarchicalDataTemplate>
 
         <HierarchicalDataTemplate DataType="report"  ItemsSource="{Binding Converter={StaticResource Converter}}">
-            <StackPanel Orientation="Horizontal"  MinWidth="200" DataContext="{Binding XPath=.}">
+            <StackPanel Orientation="Horizontal"  MinWidth="200">
                 <TextBlock Text=" Report: " MinWidth="60"/>
                 <TextBox Text="{Binding XPath=title, Mode=TwoWay}" TextChanged="TreeElementModified" MinWidth="200"/>
             </StackPanel>
