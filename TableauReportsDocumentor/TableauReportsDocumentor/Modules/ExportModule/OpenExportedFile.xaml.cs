@@ -20,8 +20,6 @@ namespace TableauReportsDocumentor.Modules.ExportModule
     /// </summary>
     public partial class OpenExportedFile : Window
     {
-        private string p;
-
         public OpenExportedFile()
         {
             InitializeComponent();

@@ -6,8 +6,9 @@
   <!--<xsl:strip-space elements="*"/>-->
 
   <xsl:template match="/workbook">
-    <report xsi:noNamespaceSchemaLocation="ImportValidator.xsd" 
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <preprocessedReport>
+      
+    <report>
       <title>
         <xsl:value-of select="local-name(.)"/>
       </title>
@@ -16,7 +17,23 @@
         <xsl:apply-templates select="worksheets"/>
       </sections>
     </report>
+      <replacements>
+        <xsl:apply-templates select="." mode="replacements"/>
+      </replacements>
+    </preprocessedReport>
   </xsl:template>
+
+  <xsl:template match="*" mode="replacements">
+    <xsl:for-each select="//column[starts-with(@name, '[Calculation_')]">
+      <replacement isRegexp="False">
+        <xsl:attribute name="original">
+          <xsl:value-of select="@name"/>
+        </xsl:attribute>
+        <xsl:value-of select="@caption"/>
+      </replacement>
+    </xsl:for-each>
+  </xsl:template>
+
 
   <xsl:template match="datasources" >
     <section visible="True">

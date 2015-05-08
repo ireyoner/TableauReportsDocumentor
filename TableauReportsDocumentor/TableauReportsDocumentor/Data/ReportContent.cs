@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
@@ -21,44 +22,86 @@ namespace TableauReportsDocumentor.Data
             }
             set
             {
-                if (value != null)
-                {
-                    convertedXml = value;
-                    try
-                    {
-                        convertedXml.Schemas.Add("", "../../Import Converters/ImportValidator.xsd");
-                        convertedXml.Validate(veh);
-                    }
-                    catch (Exception e)
-                    {
-                        throw e;
-                    }
-                }
+                convertedXml = value;
+                convertedXml = CheckXml(value);
             }
         }
+
+        private XmlDocument CheckXml(XmlDocument xml)
+        {
+            if (xml == null)
+                return xml;
+            var validatedXml = ValidateReport(xml);
+            if (validatedXml != null && "preprocessedReport".Equals(validatedXml.DocumentElement.LocalName))
+            {
+                //Console.WriteLine(GetXmlAsString(validatedXml));
+                XmlNode replacements = validatedXml.SelectSingleNode("//replacements");
+                XmlDocument reportxml = new XmlDocument();
+                reportxml.LoadXml(validatedXml.SelectSingleNode("//report").OuterXml);
+
+                String report = this.GetXmlAsString(reportxml);
+
+                foreach (XmlNode replce in replacements.SelectNodes("replacement"))
+                {
+                    Boolean isRegexp = replce.Attributes["isRegexp"].InnerText.Equals("True");
+                    String oldValue = replce.Attributes["original"].InnerText;
+                    String newValue = replce.InnerText;
+
+                    if (isRegexp)
+                    {
+                        report = Regex.Replace(report, oldValue, newValue);
+                    }
+                    else
+                    {
+                        report = report.Replace(oldValue, newValue);
+                    }
+
+                }
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(report);
+                return ValidateReport(doc);
+            }
+            else
+            {
+                return validatedXml;
+            }
+        }
+
+        private XmlDocument ValidateReport(XmlDocument xml)
+        {
+            xml.Schemas.Add("", "../../Import Converters/ImportValidator.xsd");
+            xml.Validate(veh);
+            return xml;
+        }
+
+        private String GetXmlAsString(XmlDocument xml)
+        {
+            if (xml != null)
+            {
+                MemoryStream mStream = new MemoryStream();
+                XmlTextWriter writer = new XmlTextWriter(mStream, Encoding.Unicode);
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 4;
+                writer.QuoteChar = '\'';
+                xml.WriteContentTo(writer);
+                writer.Flush();
+                mStream.Flush();
+                mStream.Position = 0;
+                StreamReader sReader = new StreamReader(mStream);
+                String FormattedXML = sReader.ReadToEnd();
+                return FormattedXML;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         public String ConvertedXmlAsString
         {
             get
             {
-                if (this.convertedXml != null)
-                {
-                    MemoryStream mStream = new MemoryStream();
-                    XmlTextWriter writer = new XmlTextWriter(mStream, Encoding.Unicode);
-                    writer.Formatting = Formatting.Indented;
-                    writer.Indentation = 4;
-                    writer.QuoteChar = '\'';
-                    this.convertedXml.WriteContentTo(writer);
-                    writer.Flush();
-                    mStream.Flush();
-                    mStream.Position = 0;
-                    StreamReader sReader = new StreamReader(mStream);
-                    String FormattedXML = sReader.ReadToEnd();
-                    return FormattedXML;
-                }
-                else
-                {
-                    return "";
-                }
+                return GetXmlAsString(this.convertedXml);
             }
             set
             {
@@ -119,9 +162,9 @@ namespace TableauReportsDocumentor.Data
         {
             XmlDocument doc = (XmlDocument)this.ConvertedXml.Clone();
 
-            String delElemXpath = " //section[@visible='False']"+
-                                  "|//subsection[@visible='False']"+
-                                  "|//text[@visible='False']"+
+            String delElemXpath = " //section[@visible='False']" +
+                                  "|//subsection[@visible='False']" +
+                                  "|//text[@visible='False']" +
                                   "|//table[@visible='False']";
             var elem = doc.SelectNodes(delElemXpath);
             while (elem.Count > 0)

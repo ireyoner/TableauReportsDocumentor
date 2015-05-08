@@ -2,32 +2,48 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
   <xs:attributeGroup name="AG_reportItem">
-    <xs:attribute name="visible">
-      <xs:simpleType>
-        <xs:restriction base="xs:string">
-          <xs:enumeration value="True"/>
-          <xs:enumeration value="False"/>
-        </xs:restriction>
-      </xs:simpleType>
-    </xs:attribute>
+    <xs:attribute name="visible" type="wpfBoolean"/>
   </xs:attributeGroup>
 
-  <xs:element name="caption" >
-    <xs:simpleType>
-      <xs:restriction base="xs:string">
-        <xs:minLength value="1"/>
-      </xs:restriction>
-    </xs:simpleType>
-  </xs:element>
+  <xs:simpleType name="wpfBoolean">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="True"/>
+      <xs:enumeration value="False"/>
+    </xs:restriction>
+  </xs:simpleType>
 
+  <xs:element name="preprocessedReport">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="report"/>
+        <xs:element name="replacements">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="replacement" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="original" use="required" type="xs:string"/>
+                      <xs:attribute name="isRegexp" use="required" type="wpfBoolean"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
   <xs:element name="report">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="title"/>
+        <xs:element name="title" type="xs:string"/>
         <xs:element name="sections">
           <xs:complexType>
             <xs:sequence>
-              <xs:element ref="section" maxOccurs="unbounded"/>            
+              <xs:element name="section" maxOccurs="unbounded"/>            
             </xs:sequence>
             <xs:attributeGroup ref="AG_reportItem"/>
           </xs:complexType>
@@ -35,40 +51,15 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-
-  <xs:element name="section" type="T_Section"/>
-  <xs:element name="subsection" type="T_SubSection"/>
-
-  <xs:complexType name="T_SubSection">
-    <xs:sequence>
-      <xs:element ref="title"/>
-      <xs:element name="content">
-        <xs:complexType>
-          <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element ref="text"/>
-            <xs:element ref="table"/>
-          </xs:choice>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-    <xs:attributeGroup ref="AG_reportItem"/>
-  </xs:complexType>
-
+  
   <xs:complexType name="T_Section">
     <xs:sequence>
-      <xs:element ref="title"/>
-      <xs:element name="content">
-        <xs:complexType>
-          <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element ref="text"/>
-            <xs:element ref="table"/>
-          </xs:choice>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="title" type="xs:string"/>
+      <xs:element name="content" type="content"/>
       <xs:element name="subsections">
         <xs:complexType>
           <xs:sequence>
-            <xs:element ref="subsection" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="subsection" minOccurs="0" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -76,51 +67,62 @@
     <xs:attributeGroup ref="AG_reportItem"/>
   </xs:complexType>
 
-  <xs:element name="title" type="xs:string"/>
-    <xs:element name="text">
-      <xs:complexType>
-        <xs:simpleContent>
-          <xs:extension base="xs:string">
-            <xs:attributeGroup ref="AG_reportItem"/>
-          </xs:extension>
-        </xs:simpleContent>
-      </xs:complexType>
-    </xs:element>
-  <xs:element name="table" type="T_table"/>
-
-  <xs:complexType name="T_table">
+  <xs:complexType name="T_SubSection">
     <xs:sequence>
-      <xs:element ref="title"/>
-      <xs:element name="header">
+      <xs:element name="title" type="xs:string"/>
+      <xs:element name="content" type="content"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="AG_reportItem"/>
+  </xs:complexType>
+
+  <xs:complexType name="content">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element name="text">
         <xs:complexType>
-          <xs:sequence>
-            <xs:element name="hcell" maxOccurs="unbounded">
-              <xs:complexType>
-                <xs:simpleContent>
-                  <xs:extension base="xs:string">
-                    <xs:attributeGroup ref="AG_reportItem"/>
-                  </xs:extension>
-                </xs:simpleContent>
-              </xs:complexType>
-            </xs:element>
-          </xs:sequence>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attributeGroup ref="AG_reportItem"/>
+            </xs:extension>
+          </xs:simpleContent>
         </xs:complexType>
       </xs:element>
-      <xs:element name="rows">
+      <xs:element name="table">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="row" maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="header">
               <xs:complexType>
                 <xs:sequence>
-                  <xs:element name="cell" type="xs:string" maxOccurs="unbounded"/>
+                  <xs:element name="hcell" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attributeGroup ref="AG_reportItem"/>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="rows">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="row" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="cell" type="xs:string" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
                 </xs:sequence>
               </xs:complexType>
             </xs:element>
           </xs:sequence>
+          <xs:attributeGroup ref="AG_reportItem"/>
         </xs:complexType>
       </xs:element>
-    </xs:sequence>
-    <xs:attributeGroup ref="AG_reportItem"/>
+    </xs:choice>
   </xs:complexType>
 
 </xs:schema>
