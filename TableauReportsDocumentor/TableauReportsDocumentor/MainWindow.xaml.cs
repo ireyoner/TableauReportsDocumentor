@@ -36,7 +36,7 @@ namespace TableauReportsDocumentor
         private Export exporter;
         private Import importer;
         private ReportDocumentMenager document;
-        
+
         private Export Exporter { get { return exporter; } }
         private Import Importer { get { return importer; } }
         private ReportDocumentMenager Document { get { return document; } set { document = value; } }
@@ -68,13 +68,18 @@ namespace TableauReportsDocumentor
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!Exporter.ExportDocument(sender, e, Document))
+            try
             {
-                MessageBox.Show("There was an error saving your documentation", "Export error");
+                if (!Exporter.ExportDocument(sender, e, Document))
+                {
+                    var ExportError = new OpenExportedFile("Unknown Error!");
+                    ExportError.ShowDialog();
+                }
             }
-            else
+            catch (Exception e2)
             {
-                MessageBox.Show("Documentation saved.", "Export OK");
+                var ExportError = new OpenExportedFile(e2.Message);
+                ExportError.ShowDialog();
             }
         }
 
@@ -106,7 +111,7 @@ namespace TableauReportsDocumentor
             {
                 MessageBox.Show(e2.Message, "Open error!");
             }
-            if(status)
+            if (status)
                 WriteDocument();
         }
 

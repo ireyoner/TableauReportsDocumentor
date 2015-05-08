@@ -89,6 +89,12 @@
       <DependentUpon>ReportXmlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\EditModule\XElementConverter.cs" />
+    <Compile Include="Modules\ExportModule\ExportFileError.xaml.cs">
+      <DependentUpon>ExportFileError.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ExportModule\OpenExportedFile.xaml.cs">
+      <DependentUpon>OpenExportedFile.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ImportModule\ImportInterface.cs" />
     <Compile Include="Modules\ImportModule\ImportTWBandTWBX.cs" />
     <Compile Include="AppWindows\About.cs">
@@ -128,6 +134,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\EditModule\ReportXmlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ExportModule\ExportFileError.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\ExportModule\OpenExportedFile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
