@@ -66,8 +66,6 @@ namespace TableauReportsDocumentor.Modules.EditModule
             try
             {
                 dataProvider.Document = Report.ConvertedXml;
-                statusLabel.Content = "Document ok.";
-                statusLabel.Background = Brushes.Green;
             }
             catch (Exception e2)
             {

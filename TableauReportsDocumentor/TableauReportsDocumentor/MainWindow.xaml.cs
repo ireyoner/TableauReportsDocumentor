@@ -68,6 +68,9 @@ namespace TableauReportsDocumentor
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
+            var loading = new Loading("Exporting Document");
+            loading.Show();
+
             try
             {
                 Exporter.ExportDocument(sender, e, Document);
@@ -77,27 +80,36 @@ namespace TableauReportsDocumentor
                 var ExportError = new ExportFileError(e2.Message);
                 ExportError.ShowDialog();
             }
+            loading.Close();
         }
 
         private void ImportButton_Click(object sender, RoutedEventArgs e)
         {
+            var loading = new Loading("Importing Document");
+            loading.Show();
             try
             {
                 var document = Importer.ImportDocument(sender, e);
             }
             catch (Exception e2)
             {
-                MessageBox.Show(e2.Message, "Import error!");
+                MessageBox.Show(e2.Message, "Import error");
             }
+            loading.Close();
         }
 
         private void Save(object sender, RoutedEventArgs e)
         {
+            var loading = new Loading("Saving Document");
+            loading.Show();
             Document.Save();
+            loading.Close();
         }
 
         private void Open(object sender, RoutedEventArgs e)
         {
+            var loading = new Loading("Opening Document");
+            loading.Show();
             Boolean status = false;
             try
             {
@@ -109,6 +121,7 @@ namespace TableauReportsDocumentor
             }
             if (status)
                 WriteDocument();
+            loading.Close();
         }
 
         private void SettingsWndShow(object sender, RoutedEventArgs e)
@@ -128,7 +141,10 @@ namespace TableauReportsDocumentor
 
         private void SaveAs(object sender, RoutedEventArgs e)
         {
+            var loading = new Loading("Saving Document");
+            loading.Show();
             Document.SaveAs();
+            loading.Close();
         }
 
         private void Close(object sender, ExecutedRoutedEventArgs e)

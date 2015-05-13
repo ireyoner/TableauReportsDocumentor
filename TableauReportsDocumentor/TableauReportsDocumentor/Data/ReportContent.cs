@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
 
@@ -146,7 +147,15 @@ namespace TableauReportsDocumentor.Data
 
         private void SetupReportContent(String original, XmlDocument converted)
         {
-            this.convertedXml = converted;
+            try
+            {
+                this.ConvertedXml = converted;
+            }
+            catch (Exception e2)
+            {
+                this.convertedXml = converted;
+                MessageBox.Show(e2.Message, "Open error!");
+            }
             this.Original = original;
         }
 

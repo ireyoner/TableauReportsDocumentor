@@ -1,0 +1,25 @@
+﻿<Window xmlns:local="clr-namespace:TableauReportsDocumentor.AppWindows"
+        x:Class="TableauReportsDocumentor.AppWindows.Loading"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Loading" Height="300" Width="300" 
+        WindowStartupLocation="CenterOwner" 
+        Icon="/TableauReportsDocumentor;component/Resources/dragon.ico">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <local:LoadingAnimation Grid.Column="1"/>
+        </Grid>
+    </Grid>
+</Window>
