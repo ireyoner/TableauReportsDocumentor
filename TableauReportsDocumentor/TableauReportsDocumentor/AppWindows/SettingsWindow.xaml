@@ -1,18 +1,120 @@
-﻿<Window x:Class="TableauReportsDocumentor.AppWindows.SettingsWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Settings">
+        xmlns:p="clr-namespace:TableauReportsDocumentor.Properties"
+        xmlns:local="clr-namespace:TableauReportsDocumentor.AppWindows" x:Class="TableauReportsDocumentor.AppWindows.SettingsWindow"
+        Title="Settings" Icon="/TableauReportsDocumentor;component/Resources/dragon.ico" Width="300" Height="300" ShowInTaskbar="False">
+    <Window.Resources>
+        <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <AlternationConverter x:Key="AlternationConverter"/>
+    </Window.Resources>
     <Grid>
-        <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+        <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="0">
             <TabItem Header="Importers">
-                
+                <StackPanel>
+                    <CheckBox Content="Use auto detected converter:" x:Name="ImportConvertersAutoSearchRB" IsChecked="{Binding ImportConvertersAutoSearch, Mode=OneWay, Source={x:Static p:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"/>
+                    <GroupBox IsEnabled="{Binding IsChecked, ElementName=ImportConvertersAutoSearchRB}">
+                        <StackPanel>
+                            <Label Content="Converters Folder:"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="ImportConvertersLocalizationTB" 
+                                         Grid.Column="0" 
+                                         Text="{Binding ImportConvertersLocalization, 
+                                                        Mode=OneWay, 
+                                                        Source={x:Static p:Settings.Default}, 
+                                                        UpdateSourceTrigger=PropertyChanged}" 
+                                         IsReadOnly="True" 
+                                         GotFocus="ImportConvertersLocalizationChange" />
+                                <Button Content="..." Grid.Column="1"  Click="ImportConvertersLocalizationChange"/>
+                            </Grid>
+                            <Label Content="Fallback Converter:"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="ImportConverterDefaultInstanceTB"  
+                                         Grid.Column="0"  
+                                         Text="{Binding ImportConverterDefaultInstance, 
+                                                        Mode=OneWay, 
+                                                        Source={x:Static p:Settings.Default}, 
+                                                        UpdateSourceTrigger=PropertyChanged}" 
+                                         IsReadOnly="True" 
+                                         GotFocus="ImportConverterDefaultInstanceChange" />
+                                <Button Content="..."  Grid.Column="1"  Click="ImportConverterDefaultInstanceChange"/>
+                            </Grid>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox IsEnabled="{Binding IsChecked, Converter={StaticResource InverseBooleanConverter}, ElementName=ImportConvertersAutoSearchRB}">
+                        <StackPanel>
+                            <Label Content="Use this converter:"/>
+                            <WrapPanel>
+                            </WrapPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="UserConverterTB" 
+                                         Grid.Column="0" 
+                                         IsReadOnly="True"  
+                                         Text="{Binding UserConverter, 
+                                                        Mode=OneWay, 
+                                                        Source={x:Static p:Settings.Default}, 
+                                                        UpdateSourceTrigger=PropertyChanged}" 
+                                         GotFocus="UserConverterChange" />
+                                <Button Content="..."  Grid.Column="1"  Click="UserConverterChange"/>
+                            </Grid>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
             </TabItem>
             <TabItem Header="Editors">
-                
+                <StackPanel>
+                    <StackPanel>
+                        <Label Content="ReportValidator File:"/>
+                        <WrapPanel>
+                        </WrapPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="ReportDocumentValidatorTB" 
+                                     Grid.Column="0"  
+                                     IsReadOnly="True" 
+                                     Text="{Binding ReportDocumentValidator, 
+                                                    Mode=OneWay, 
+                                                    Source={x:Static p:Settings.Default}, 
+                                                    UpdateSourceTrigger=PropertyChanged}" 
+                                     GotFocus="ReportDocumentValidatorChange" />
+                            <Button Content="..."  Grid.Column="1" Click="ReportDocumentValidatorChange"/>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
             </TabItem>
-            <TabItem Header="Exporters">
-                
-            </TabItem>
+            <TabItem Header="Exporters"/>
         </TabControl>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Save" Click="SaveSettings" Grid.Column="1"/>
+            <Button Content="Cancel" Click="CancelSettings" Grid.Column="3"/>
+        </Grid>
     </Grid>
 </Window>

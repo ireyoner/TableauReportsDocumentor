@@ -16,7 +16,6 @@ namespace TableauReportsDocumentor.Modules.ExportModule
     class Export
     {
         public Dictionary<String, Tuple<ExportInterface, int>> exporters { get; private set; }
-        private readonly String fallbackExtension = "trd";
         private SaveFileDialog saveFileDialog;
         private String saveFileDialogFilter;
 
@@ -39,10 +38,9 @@ namespace TableauReportsDocumentor.Modules.ExportModule
 
             this.saveFileDialog = new SaveFileDialog();
             saveFileDialog.Title = "Save prepared report documentation";
-            saveFileDialogFilter = "Tableau Report Documentator (*.trd)|*.trd";
+            saveFileDialogFilter = null;
 
             this.exporters = new Dictionary<String, Tuple<ExportInterface, int>>();
-            exporters.Add(fallbackExtension, getExporterTouple(new TrdExport(),true));
             loadExportres();
         }
 
@@ -147,8 +145,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
                 saveFileDialog.DefaultExt = exporter.FileExtinsion;
                 saveFileDialog.FilterIndex = saveIndex;
 
-                saveFileDialog.ShowDialog();
-                if (saveFileDialog.FileName != "")
+                if (saveFileDialog.ShowDialog()??false)
                 {
                     var fileExtinsion = Path.GetExtension(saveFileDialog.FileName).Substring(1);
                     if (exporters.ContainsKey(fileExtinsion))
@@ -162,20 +159,10 @@ namespace TableauReportsDocumentor.Modules.ExportModule
                             }
                         }
                         catch (Exception e2) {
-                            var ExportError = new OpenExportedFile(e2.Message);
+                            var ExportError = new ExportFileError(e2.Message);
                             ExportError.ShowDialog();
                         }
                         return true;
-                    }
-                    else if (exporters.ContainsKey(fallbackExtension))
-                    {
-                        exporter = exporters[fallbackExtension].Item1;
-                        var OK = exporter.Export(saveFileDialog.FileName, document.Content.ConvertedXml);
-                        if (OK)
-                        {
-                            document.FullFilePath = saveFileDialog.FileName;
-                        }
-                        return OK;
                     }
                 }
                 return false;

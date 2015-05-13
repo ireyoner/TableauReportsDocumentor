@@ -36,6 +36,7 @@ namespace TableauReportsDocumentor.Modules.EditModule
             set
             {
                 RXV.statusLabel = value;
+                RTV.statusLabel = value;
             }
         }
 

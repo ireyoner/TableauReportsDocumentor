@@ -22,8 +22,16 @@ namespace TableauReportsDocumentor.Data
             }
             set
             {
-                convertedXml = value;
-                convertedXml = CheckXml(value);
+                try
+                {
+                    convertedXml = CheckXml(value);
+                }
+                catch (Exception e3)
+                {
+                    convertedXml = value;
+                    throw e3;
+                }
+
             }
         }
 
@@ -69,7 +77,7 @@ namespace TableauReportsDocumentor.Data
 
         private XmlDocument ValidateReport(XmlDocument xml)
         {
-            xml.Schemas.Add("", "../../Import Converters/ImportValidator.xsd");
+            xml.Schemas.Add("", Properties.Settings.Default.ReportDocumentValidator);
             xml.Validate(veh);
             return xml;
         }
@@ -109,7 +117,7 @@ namespace TableauReportsDocumentor.Data
                 {
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(value);
-                    this.convertedXml = doc;
+                    this.ConvertedXml = doc;
                 }
             }
         }
@@ -138,7 +146,7 @@ namespace TableauReportsDocumentor.Data
 
         private void SetupReportContent(String original, XmlDocument converted)
         {
-            this.ConvertedXml = converted;
+            this.convertedXml = converted;
             this.Original = original;
         }
 

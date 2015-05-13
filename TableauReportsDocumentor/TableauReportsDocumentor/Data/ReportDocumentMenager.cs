@@ -197,6 +197,7 @@ namespace TableauReportsDocumentor.Data
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Tableau Report Documentator (*.trdx)|*.trdx|All files (*.*)|*.*";
                 saveFileDialog.DefaultExt = "trdx";
+                saveFileDialog.FileName = Path.GetFileNameWithoutExtension(FileName);
                 if (saveFileDialog.ShowDialog() ?? false)
                 {
                     return SaveTRDX(saveFileDialog.FileName);
@@ -235,8 +236,6 @@ namespace TableauReportsDocumentor.Data
             this.FullFilePath = filepath;
             return true;
         }
-
-
 
         public XmlDocument GetExportXml()
         {

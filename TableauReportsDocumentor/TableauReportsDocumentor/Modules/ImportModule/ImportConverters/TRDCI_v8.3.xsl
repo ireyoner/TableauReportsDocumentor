@@ -187,13 +187,19 @@
     <table visible="True">
       <title>filter</title>
       <header>
+        <hcell visible="True">class</hcell>
         <hcell visible="True">column</hcell>
         <hcell visible="True">level</hcell>
+        <hcell visible="True">function</hcell>
+        <hcell visible="True">value</hcell>
         <hcell visible="True">member</hcell>
       </header>
       <rows>
-      <xsl:for-each select="filter">
+      <xsl:for-each select="filter[not(groupfilter/groupfilter)]">
           <row>
+            <cell>
+              <xsl:value-of select="@class"/>
+            </cell>
             <cell>
               <xsl:value-of select="@column"/>
             </cell>
@@ -201,7 +207,31 @@
               <xsl:value-of select="groupfilter/@level"/>
             </cell>
             <cell>
+              <xsl:value-of select="groupfilter/@function"/>
+            </cell>
+            <cell>Min:<xsl:value-of select="min"/>; Max:<xsl:value-of select="max"/>; From:<xsl:value-of select="groupfilter/@from"/>; To:<xsl:value-of select="groupfilter/@to"/>;</cell>
+            <cell>
               <xsl:value-of select="groupfilter/@member"/>
+            </cell>
+          </row>
+      </xsl:for-each>
+      <xsl:for-each select="filter[groupfilter/groupfilter]//groupfilter">
+          <row>
+            <cell>
+              <xsl:value-of select="../@class"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="../@column"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="@level"/>
+            </cell>
+            <cell>
+              <xsl:value-of select="@function"/>
+            </cell>
+            <cell>Min:<xsl:value-of select="min"/>; Max:<xsl:value-of select="max"/>; From:<xsl:value-of select="@from"/>; To:<xsl:value-of select="@to"/>;</cell>
+            <cell>
+              <xsl:value-of select="@member"/>
             </cell>
           </row>
       </xsl:for-each>

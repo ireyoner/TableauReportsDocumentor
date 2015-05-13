@@ -70,15 +70,11 @@ namespace TableauReportsDocumentor
         {
             try
             {
-                if (!Exporter.ExportDocument(sender, e, Document))
-                {
-                    var ExportError = new OpenExportedFile("Unknown Error!");
-                    ExportError.ShowDialog();
-                }
+                Exporter.ExportDocument(sender, e, Document);
             }
             catch (Exception e2)
             {
-                var ExportError = new OpenExportedFile(e2.Message);
+                var ExportError = new ExportFileError(e2.Message);
                 ExportError.ShowDialog();
             }
         }

@@ -1,7 +1,21 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TableauReportsDocumentor.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ImportConvertersLocalization" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ImportConverters</Value>
+    </Setting>
+    <Setting Name="ReportDocumentValidator" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Validation/TabRepDocXmlValidator.xsd</Value>
+    </Setting>
+    <Setting Name="ImportConverterDefaultInstance" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ImportConverters/TRDCI_v8.3.xsl</Value>
+    </Setting>
+    <Setting Name="ImportConvertersAutoSearch" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="UserConverter" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
 </SettingsFile>

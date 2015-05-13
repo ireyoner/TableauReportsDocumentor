@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
   <xs:attributeGroup name="AG_reportItem">
-    <xs:attribute name="visible" type="wpfBoolean"/>
+    <xs:attribute name="visible" type="wpfBoolean" use="required"/>
   </xs:attributeGroup>
 
   <xs:simpleType name="wpfBoolean">
@@ -43,9 +43,8 @@
         <xs:element name="sections">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="section" maxOccurs="unbounded"/>            
+              <xs:element name="section" maxOccurs="unbounded" type="T_Section"/>            
             </xs:sequence>
-            <xs:attributeGroup ref="AG_reportItem"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
@@ -59,7 +58,7 @@
       <xs:element name="subsections">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="subsection" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="subsection" minOccurs="0" maxOccurs="unbounded" type="T_SubSection"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>

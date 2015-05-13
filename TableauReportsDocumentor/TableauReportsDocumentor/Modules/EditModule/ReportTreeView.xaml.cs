@@ -33,6 +33,7 @@ namespace TableauReportsDocumentor.Modules.EditModule
                 ReloadTreeView();
             }
         }
+        public Label statusLabel { get; set; }
 
         public ReportTreeView()
         {
@@ -42,7 +43,17 @@ namespace TableauReportsDocumentor.Modules.EditModule
 
         private void TreeElementModified(object sender, RoutedEventArgs e)
         {
-            Report.ConvertedXml = dataProvider.Document;
+            try
+            {
+                Report.ConvertedXml = dataProvider.Document;
+                statusLabel.Content = "Document ok.";
+                statusLabel.Background = Brushes.Green;
+            }
+            catch (Exception e2)
+            {
+                statusLabel.Content = e2.Message;
+                statusLabel.Background = Brushes.Red;
+            }
         }
 
         private void TreeFocused(object sender, RoutedEventArgs e)
@@ -55,8 +66,14 @@ namespace TableauReportsDocumentor.Modules.EditModule
             try
             {
                 dataProvider.Document = Report.ConvertedXml;
+                statusLabel.Content = "Document ok.";
+                statusLabel.Background = Brushes.Green;
             }
-            catch (NullReferenceException e2) { }
+            catch (Exception e2)
+            {
+                statusLabel.Content = e2.Message;
+                statusLabel.Background = Brushes.Red;
+            }
         }
 
     }

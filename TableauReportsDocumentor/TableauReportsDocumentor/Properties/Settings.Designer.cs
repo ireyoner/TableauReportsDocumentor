@@ -8,22 +8,78 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TableauReportsDocumentor.Properties
-{
-
-
+namespace TableauReportsDocumentor.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ImportConverters")]
+        public string ImportConvertersLocalization {
+            get {
+                return ((string)(this["ImportConvertersLocalization"]));
+            }
+            set {
+                this["ImportConvertersLocalization"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Validation/TabRepDocXmlValidator.xsd")]
+        public string ReportDocumentValidator {
+            get {
+                return ((string)(this["ReportDocumentValidator"]));
+            }
+            set {
+                this["ReportDocumentValidator"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ImportConverters/TRDCI_v8.3.xsl")]
+        public string ImportConverterDefaultInstance {
+            get {
+                return ((string)(this["ImportConverterDefaultInstance"]));
+            }
+            set {
+                this["ImportConverterDefaultInstance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ImportConvertersAutoSearch {
+            get {
+                return ((bool)(this["ImportConvertersAutoSearch"]));
+            }
+            set {
+                this["ImportConvertersAutoSearch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UserConverter {
+            get {
+                return ((string)(this["UserConverter"]));
+            }
+            set {
+                this["UserConverter"] = value;
             }
         }
     }

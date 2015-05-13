@@ -44,33 +44,22 @@
         </Menu>
         <ToolBarPanel  Grid.Row="1">
             <ToolBarTray>
-                <ToolBar ClipToBounds="True">
+                <ToolBar ClipToBounds="False">
                     <Button Click="Open" Content="Open" />
                     <Button Click="Save" Content="Save" />
                 </ToolBar>
-                <ToolBar  Name="ExportTB" ClipToBounds="True">
+                <ToolBar  Name="ExportTB" ClipToBounds="False">
                     <Label Content="Export:"/>
                 </ToolBar>
-                <ToolBar ClipToBounds="True">
+                <!--<ToolBar ClipToBounds="False">
                     <Button Command="Cut" Content="Cut" />
                     <Button Command="Copy" Content="Copy" />
                     <Button Command="Paste" Content="Paste" />
-                </ToolBar>
+                </ToolBar>-->
             </ToolBarTray>
         </ToolBarPanel>
         <Grid Grid.Row="2">
             <EditModule:Editor x:Name="EditorView" />
-            <!--<TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TabItem Header="Export Report Tree View">
-                    <EditModule:ReportTreeView x:Name="RTV" />
-                </TabItem>
-                <TabItem Header="Export Report Source XML">
-                    <EditModule:ReportXmlView x:Name="RXV"/>
-                </TabItem>
-                <TabItem Header="Original Report Source XML">
-                    <EditModule:ReportOriginalSource x:Name="ROV"/>
-                </TabItem>
-            </TabControl>-->
         </Grid>
         <StatusBar Name="statusBar" Grid.Row="3">
             <StatusBarItem HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

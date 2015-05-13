@@ -36,19 +36,49 @@ namespace TableauReportsDocumentor.Modules.ImportModule
                 StreamReader streamReader = new StreamReader(filename);
                 original = streamReader.ReadToEnd();
                 streamReader.Close();
-                return ImportTWBfromXPathDocument(new XPathDocument(filename));
+                var doc = new XmlDocument();
+                doc.Load(filename);
+                return ImportTWBfromXmlDocument(doc);
             }
             return false;
         }
 
-        private Boolean ImportTWBfromXPathDocument(XPathDocument myXPathDoc)
+        private Boolean ImportTWBfromXmlDocument(XmlDocument myXPathDoc)
         {
 
-            converted = new XmlDocument();
+            String xslPath = "";
+            if (Properties.Settings.Default.ImportConvertersAutoSearch)
+            {
+                String version = myXPathDoc.SelectSingleNode("/workbook/@version").InnerText;
+                String converter = Properties.Settings.Default.ImportConvertersLocalization + "\\TRDCI_v" + version + ".xsl";
+                if (File.Exists(converter))
+                {
+                    xslPath = converter;
+                }
+                if ("".Equals(xslPath) && File.Exists(Properties.Settings.Default.ImportConverterDefaultInstance))
+                {
+                    xslPath = Properties.Settings.Default.ImportConverterDefaultInstance;
+                }
+            }
+            else
+            {
+                if (File.Exists(Properties.Settings.Default.UserConverter))
+                {
+                    xslPath = Properties.Settings.Default.UserConverter;
+                }
+            }
 
             XslCompiledTransform myXslTrans = new XslCompiledTransform();
-            myXslTrans.Load("../../Import Converters/TRDCI_v8.3.xsl");
+            if (!"".Equals(xslPath) && File.Exists(xslPath))
+            {
+                myXslTrans.Load(xslPath);
+            }
+            else
+            {
+                throw new Exception("\".twb\" File Converter in Path:"+xslPath+" Not Found!");
+            }
 
+            converted = new XmlDocument();
             using (XmlWriter writer = converted.CreateNavigator().AppendChild())
             {
                 myXslTrans.Transform(myXPathDoc, null, writer);
@@ -73,7 +103,9 @@ namespace TableauReportsDocumentor.Modules.ImportModule
                                 StreamReader streamReader = new StreamReader(appManifestFileStream);
                                 original = streamReader.ReadToEnd();
                                 streamReader.Close();
-                                return ImportTWBfromXPathDocument(new XPathDocument(appManifestFileStream));
+                                var doc = new XmlDocument();
+                                doc.Load(filename);
+                                return ImportTWBfromXmlDocument(doc);
                             }
                         }
                     }
@@ -118,8 +150,6 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             }
             return false;
         }
-
-
 
     }
 }
