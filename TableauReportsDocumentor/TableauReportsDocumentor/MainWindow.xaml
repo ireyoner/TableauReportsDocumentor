@@ -31,16 +31,16 @@
                 <MenuItem Command="SaveAs" InputGestureText="Ctrl+Shift+S"/>
                 <MenuItem Command="Close"  InputGestureText="Alt+F4"/>
             </MenuItem>
-            <MenuItem Header="_Edit">
+            <!--<MenuItem Header="_Edit">
                 <MenuItem Header="_Cut" Command="Cut"/>
                 <MenuItem Header="_Copy" Command="Copy"/>
                 <MenuItem Header="_Paste" Command="Paste"/>
-            </MenuItem>
+            </MenuItem>-->
             <MenuItem Header="_Import" Name="ImportM"/>
             <!--<MenuItem Header="_View" />-->
             <MenuItem Header="_Export" Name="ExportM"/>
             <MenuItem Header="_Settings" Click="SettingsWndShow" />
-            <MenuItem Header="_About" Click="AboutWndShow" />
+            <!--<MenuItem Header="_About" Click="AboutWndShow" />-->
         </Menu>
         <ToolBarPanel  Grid.Row="1">
             <ToolBarTray>

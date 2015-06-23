@@ -86,15 +86,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AppWindows\Block.xaml.cs">
-      <DependentUpon>Block.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="AppWindows\Loading.xaml.cs">
-      <DependentUpon>Loading.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="AppWindows\LoadingAnimation.xaml.cs">
-      <DependentUpon>LoadingAnimation.xaml</DependentUpon>
-    </Compile>
     <Compile Include="AppWindows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -127,18 +118,6 @@
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\ReportDocumentMenager.cs" />
-    <Page Include="AppWindows\Block.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="AppWindows\Loading.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="AppWindows\LoadingAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="AppWindows\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

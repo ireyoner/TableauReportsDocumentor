@@ -7,7 +7,6 @@
 
   <xsl:template match="/workbook">
     <preprocessedReport>
-      
     <report>
       <title>
         <xsl:value-of select="local-name(.)"/>

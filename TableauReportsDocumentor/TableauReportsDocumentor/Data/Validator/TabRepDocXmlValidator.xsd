@@ -2,10 +2,19 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
   <xs:attributeGroup name="AG_reportItem">
-    <xs:attribute name="visible" type="wpfBoolean" use="required"/>
+    <xs:attribute name="visible" type="wpfBoolean" use="required">
+      <xs:annotation>
+        <xs:documentation>Check option for CheckBox in TreeView C#</xs:documentation>
+        <xs:documentation>If value is True, xml node is exported to other format</xs:documentation>
+        <xs:documentation>If value is False, xml node is not exported</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:attributeGroup>
 
   <xs:simpleType name="wpfBoolean">
+    <xs:annotation>
+      <xs:documentation>Type reflecting bool type in C#</xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:enumeration value="True"/>
       <xs:enumeration value="False"/>
@@ -13,18 +22,38 @@
   </xs:simpleType>
 
   <xs:element name="preprocessedReport">
+    <xs:annotation>
+      <xs:documentation>XML received from Importers, preprocessed before dispaly</xs:documentation>
+    </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="report"/>
         <xs:element name="replacements">
+          <xs:annotation>
+            <xs:documentation>Replace elements before display on tree</xs:documentation>
+          </xs:annotation>
           <xs:complexType>
             <xs:sequence>
               <xs:element name="replacement" maxOccurs="unbounded" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>One replacement in every replacement element, order is crushal!</xs:documentation>
+                </xs:annotation>
                 <xs:complexType>
                   <xs:simpleContent>
+                    <xs:annotation>
+                      <xs:documentation>Replacement finall value</xs:documentation>
+                    </xs:annotation>
                     <xs:extension base="xs:string">
-                      <xs:attribute name="original" use="required" type="xs:string"/>
-                      <xs:attribute name="isRegexp" use="required" type="wpfBoolean"/>
+                      <xs:attribute name="original" use="required" type="xs:string">
+                        <xs:annotation>
+                          <xs:documentation>Replacement original value</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="isRegexp" use="required" type="wpfBoolean">
+                        <xs:annotation>
+                          <xs:documentation>Decides, if the original value is a regex pattern</xs:documentation>
+                        </xs:annotation>
+                      </xs:attribute>
                     </xs:extension>
                   </xs:simpleContent>
                 </xs:complexType>
@@ -37,9 +66,16 @@
   </xs:element>
   
   <xs:element name="report">
+    <xs:annotation>
+      <xs:documentation>Report XML, used for Display TreeView</xs:documentation>
+    </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="title" type="xs:string"/>
+        <xs:element name="title" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Report title</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="sections">
           <xs:complexType>
             <xs:sequence>
@@ -53,7 +89,11 @@
   
   <xs:complexType name="T_Section">
     <xs:sequence>
-      <xs:element name="title" type="xs:string"/>
+      <xs:element name="title" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Section title</xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element name="content" type="content"/>
       <xs:element name="subsections">
         <xs:complexType>
@@ -68,15 +108,25 @@
 
   <xs:complexType name="T_SubSection">
     <xs:sequence>
-      <xs:element name="title" type="xs:string"/>
+      <xs:element name="title" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Subsection title</xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element name="content" type="content"/>
     </xs:sequence>
     <xs:attributeGroup ref="AG_reportItem"/>
   </xs:complexType>
 
   <xs:complexType name="content">
+    <xs:annotation>
+      <xs:documentation>Section / Subsections content</xs:documentation>
+    </xs:annotation>
     <xs:choice maxOccurs="unbounded" minOccurs="0">
       <xs:element name="text">
+        <xs:annotation>
+          <xs:documentation>Text content, for displaying common information</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
           <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -86,13 +136,23 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="table">
+        <xs:annotation>
+          <xs:documentation>Teble content, for stucturized data, requeres in header and each row the same number of hcell's or cell's</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="title" type="xs:string"/>
+            <xs:element name="title" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>Table title</xs:documentation>
+              </xs:annotation>
+            </xs:element>
             <xs:element name="header">
               <xs:complexType>
                 <xs:sequence>
                   <xs:element name="hcell" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:documentation>Table colums header cells, if attribute visible is False the column is not exported</xs:documentation>
+                    </xs:annotation>
                     <xs:complexType>
                       <xs:simpleContent>
                         <xs:extension base="xs:string">
@@ -108,9 +168,16 @@
               <xs:complexType>
                 <xs:sequence>
                   <xs:element name="row" maxOccurs="unbounded" minOccurs="0">
+                    <xs:annotation>
+                      <xs:documentation>Table rows set</xs:documentation>
+                    </xs:annotation>
                     <xs:complexType>
                       <xs:sequence>
-                        <xs:element name="cell" type="xs:string" maxOccurs="unbounded"/>
+                        <xs:element name="cell" type="xs:string" maxOccurs="unbounded">
+                          <xs:annotation>
+                            <xs:documentation>Table colum row cells</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
                       </xs:sequence>
                     </xs:complexType>
                   </xs:element>
