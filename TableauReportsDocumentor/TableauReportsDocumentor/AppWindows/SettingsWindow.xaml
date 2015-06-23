@@ -15,8 +15,6 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
-        <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="0">
-            <TabItem Header="Importers">
                 <StackPanel>
                     <CheckBox Content="Use auto detected converter:" x:Name="ImportConvertersAutoSearchRB" IsChecked="{Binding ImportConvertersAutoSearch, Mode=OneWay, Source={x:Static p:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"/>
                     <GroupBox IsEnabled="{Binding IsChecked, ElementName=ImportConvertersAutoSearchRB}">
@@ -77,12 +75,8 @@
                             </Grid>
                         </StackPanel>
                     </GroupBox>
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Editors">
-                <StackPanel>
                     <StackPanel>
-                        <Label Content="ReportValidator File:"/>
+                        <Label Content="ReportValidator File:" />
                         <WrapPanel>
                         </WrapPanel>
                         <Grid>
@@ -102,9 +96,6 @@
                         </Grid>
                     </StackPanel>
                 </StackPanel>
-            </TabItem>
-            <TabItem Header="Exporters"/>
-        </TabControl>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
