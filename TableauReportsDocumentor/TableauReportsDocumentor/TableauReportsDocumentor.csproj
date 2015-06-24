@@ -121,7 +121,7 @@
     <Compile Include="AppWindows\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\ReportDocumentMenager.cs" />
+    <Compile Include="Data\ReportDocumentManager.cs" />
     <Page Include="AppWindows\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

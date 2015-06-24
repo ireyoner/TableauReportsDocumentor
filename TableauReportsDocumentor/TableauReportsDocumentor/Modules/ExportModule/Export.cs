@@ -60,6 +60,19 @@ namespace TableauReportsDocumentor.Modules.ExportModule
 
         private int saveExporterIndex = 1;
         private const int noSaveExporterIndex = -1;
+        /*
+         * Function: getExporterTouple
+         * Provides a Tuple with a reference to the exporter and a flag informing if the exporter needs the save file dialog to be displayed.
+         * The flag is provided in preparation for possible new features of the program like saving directly to a cloud service (like Google Drive)
+         * Such exporters would require a separate window in order to choose a safe location.
+         * 
+         * Parameters:
+         *  exporter - a reference to an exporter
+         *  isForSafe - flag determining if the exporter save a file in a local file system.
+         *  
+         * Returns:
+         *  A Tuple holding a reference to the Exporter and an index position of the format option corresponding to the exporter in the save file dialog.
+         */
         private Tuple<ExportInterface, int> getExporterTouple(ExportInterface exporter, bool isForSave)
         {
             if (isForSave)
