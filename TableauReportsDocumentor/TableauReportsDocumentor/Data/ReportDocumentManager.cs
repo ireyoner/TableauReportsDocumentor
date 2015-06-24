@@ -1,4 +1,11 @@
-﻿using Microsoft.Win32;
+﻿/*
+ * File: ReportDocumentManager.cs
+ * Class: ReportDocumentManager
+ * 
+ * An class responsible for menaging report file, not content
+ * 
+ */
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
