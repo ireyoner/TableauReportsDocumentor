@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*
+ * File: ExportCSV.cs
+ * Class: ExportCSV
+ * 
+ * Exporter class implementing ExportInterface and ExporterInstance that transforms 
+ * our TRD xml file into a complete .csv file.
+ * 
+ * Functions undocumented here that override initial implementation from ExporterInstance 
+ * are documented in ExporterInstance source where they were first declared.
+ * 
+ * It uses only native C# functions.
+ * 
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,12 +25,22 @@ namespace TableauReportsDocumentor.Export_Converters
 {
     class ExportCSV : ExporterInstance, ExportInterface
     {
+
         private String fieldsSeparator = ";";
+
+        /*
+         * Property: FileExtension
+         * Read only property stating the extension of the file produced by this exporter.
+         */
         public string FileExtension
         {
             get { return "csv"; }
         }
 
+        /*
+         * Property: MenuItemText
+         * Read only property providing the name of the menu item under which this exporter will be avaliable.
+         */
         public string MenuItemText
         {
             get { return "csv"; }
@@ -27,7 +51,7 @@ namespace TableauReportsDocumentor.Export_Converters
             get
             {
                 return null;
-                //Uri iconUri = new Uri("docx.ico", UriKind.RelativeOrAbsolute);
+                //Uri iconUri = new Uri("csv.ico", UriKind.RelativeOrAbsolute);
                 //return BitmapFrame.Create(iconUri);
             }
         }
@@ -37,6 +61,10 @@ namespace TableauReportsDocumentor.Export_Converters
             get { return MenuItemText; }
         }
 
+        /*
+         * Property: ExportSaveFileDialogFilter
+         * Read only property providing filter name and value for the SaveFile Dialog.
+         */
         public string ExportSaveFileDialogFilter
         {
             get { return "csv file|*.csv"; }
