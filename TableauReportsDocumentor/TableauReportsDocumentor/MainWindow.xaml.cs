@@ -35,11 +35,11 @@ namespace TableauReportsDocumentor
 
         private Export exporter;
         private Import importer;
-        private ReportDocumentMenager document;
+        private ReportDocumentManager document;
 
         private Export Exporter { get { return exporter; } }
         private Import Importer { get { return importer; } }
-        private ReportDocumentMenager Document { get { return document; } set { document = value; } }
+        private ReportDocumentManager Document { get { return document; } set { document = value; } }
 
         public MainWindow()
         {
@@ -57,7 +57,7 @@ namespace TableauReportsDocumentor
                 {
                     ImportM.IsEnabled = false;
                 }
-                Document = new ReportDocumentMenager();
+                Document = new ReportDocumentManager();
             }
             catch (Exception e2)
             {

@@ -12,7 +12,7 @@ using TableauReportsDocumentor.Modules.ImportModule;
 
 namespace TableauReportsDocumentor.Data
 {
-    public class ReportDocumentMenager
+    public class ReportDocumentManager
     {
         private ReportContent content;
         public ReportContent Content
@@ -87,17 +87,17 @@ namespace TableauReportsDocumentor.Data
 
         private ImportTWBandTWBX importTWBandTWBX;
 
-        public ReportDocumentMenager()
+        public ReportDocumentManager()
         {
             SetupReportDocument(new ReportContent());
         }
 
-        public ReportDocumentMenager(XmlDocument xmlDocument)
+        public ReportDocumentManager(XmlDocument xmlDocument)
         {
             SetupReportDocument(new ReportContent(xmlDocument));
         }
 
-        public ReportDocumentMenager(ReportContent reportContent)
+        public ReportDocumentManager(ReportContent reportContent)
         {
             SetupReportDocument(reportContent);
         }
