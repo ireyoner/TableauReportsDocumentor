@@ -213,7 +213,9 @@ namespace TableauReportsDocumentor.Export_Converters
             int i;
             for (i = 0; i < colCount; i++)
             {
-                t.Rows[0].Cells[i].InsertParagraph(headers[i].InnerText);
+                
+                t.Rows[0].Cells[i].Paragraphs.Last().InsertText(0, headers[i].InnerText);
+                t.Rows[0].Cells[i].Paragraphs.Last().Bold();
             }
 
             // For each row described in the xml add a table row in the document
@@ -223,7 +225,9 @@ namespace TableauReportsDocumentor.Export_Converters
                 Row newTabRow = t.InsertRow();
                 for (i = 0; i < colCount; i++)
                 {
-                    newTabRow.Cells[i].InsertParagraph(row.ChildNodes[i].InnerText);
+                    // newTabRow.Cells[i].RemoveParagraphAt(0);
+                    //newTabRow.Cells[i].InsertParagraph(row.ChildNodes[i].InnerText);
+                    newTabRow.Cells[i].Paragraphs.Last().InsertText(0,row.ChildNodes[i].InnerText);
                 }
 
             }
