@@ -7,7 +7,7 @@
         mc:Ignorable="d" 
         x:Class="TableauReportsDocumentor.MainWindow"
         Title="Tableau Reports Documentor" WindowState="Maximized"
-        Icon="Resources/dragon.ico">
+        Icon="Resources/TRD.ico">
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="Open" />
         <CommandBinding Command="Save" Executed="Save" />
