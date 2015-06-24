@@ -67,11 +67,11 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             if (exporter.MenuItemText != null)
             {
                 String id = "exporter_" + exporters.Count;
-                if (exporter.FileExtinsion != null)
+                if (exporter.FileExtension != null)
                 {
-                    if (!exporters.ContainsKey(exporter.FileExtinsion))
+                    if (!exporters.ContainsKey(exporter.FileExtension))
                     {
-                        id = exporter.FileExtinsion;
+                        id = exporter.FileExtension;
                         exporters.Add(id, getExporterTouple(exporter,true));
                         if (saveFileDialogFilter != null)
                             saveFileDialogFilter = saveFileDialogFilter + "|" + exporter.ExportSaveFileDialogFilter;
@@ -80,7 +80,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
                     }
                     else
                     {
-                        throw new Exception("Exporter for " + exporter.FileExtinsion + " already exists!");
+                        throw new Exception("Exporter for " + exporter.FileExtension + " already exists!");
                     }
                 }
                 else
@@ -142,7 +142,7 @@ namespace TableauReportsDocumentor.Modules.ExportModule
             {
                 saveFileDialog.FileName = Path.GetFileNameWithoutExtension(document.FileName);
                 saveFileDialog.Filter = saveFileDialogFilter + "|All files (*.*)|*.*";
-                saveFileDialog.DefaultExt = exporter.FileExtinsion;
+                saveFileDialog.DefaultExt = exporter.FileExtension;
                 saveFileDialog.FilterIndex = saveIndex;
 
                 if (saveFileDialog.ShowDialog()??false)

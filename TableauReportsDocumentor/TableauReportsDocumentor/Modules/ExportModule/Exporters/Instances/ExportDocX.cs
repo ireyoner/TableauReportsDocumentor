@@ -5,9 +5,10 @@
  * Exporter class implementing ExportInterface that transforms our TRD xml file into a complete .docx document.
  * It uses a DocX library to accomplish it's task.
  * 
- * Library: DocX
- * Version: 1.0.0.15
- * Source: https://docx.codeplex.com/
+ * Used libraries:
+ *  Library: DocX
+ *  Version: 1.0.0.15
+ *  Source: https://docx.codeplex.com/
  */
  
 using System;
@@ -27,7 +28,7 @@ namespace TableauReportsDocumentor.Export_Converters
          * Property: FileExtension
          * Read only property stating the extension of the file produced by this exporter.
          */
-        public string FileExtinsion
+        public string FileExtension
         {
             get { return "docx"; }
         }

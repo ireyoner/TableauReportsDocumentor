@@ -12,7 +12,7 @@ namespace TableauReportsDocumentor.Export_Converters
     class ExportCSV : ExporterInstance, ExportInterface
     {
         private String fieldsSeparator = ";";
-        public string FileExtinsion
+        public string FileExtension
         {
             get { return "csv"; }
         }

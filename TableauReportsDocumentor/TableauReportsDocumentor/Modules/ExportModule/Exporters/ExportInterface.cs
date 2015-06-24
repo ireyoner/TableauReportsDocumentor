@@ -15,7 +15,7 @@ namespace TableauReportsDocumentor.Export_Converters
 
         // Optional field, required for SaveFileDialog to be shown while exporting, proper format eg. "docx", 
         // unique key for save file exporters (only one exporter (in saving file) for each extinsion can be registered)
-        String FileExtinsion { get; }
+        String FileExtension { get; }
 
         // Optional field, required for SaveFileDialog to be shown while exporting, proper format eg. "Docx document|*.docx"
         String ExportSaveFileDialogFilter { get; }
