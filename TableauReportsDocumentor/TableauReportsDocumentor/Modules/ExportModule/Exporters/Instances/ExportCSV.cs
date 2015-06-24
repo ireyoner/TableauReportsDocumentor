@@ -5,6 +5,7 @@
  * Exporter class implementing ExportInterface and ExporterInstance that transforms 
  * our TRD xml file into a complete .csv file.
  * 
+ * Note: (!!!)
  * Functions undocumented here that override initial implementation from ExporterInstance 
  * are documented in ExporterInstance source where they were first declared.
  * 
@@ -70,6 +71,17 @@ namespace TableauReportsDocumentor.Export_Converters
             get { return "csv file|*.csv"; }
         }
 
+        /*
+         * Function: StringToCSVCell
+         * Converts a string into a single cell of a CSV file
+         * 
+         * Parameters: 
+         *  str - a text string we want to convert
+         *  
+         * Returns:
+         *  A string containing the input string after clearing of any field separators with a field separator added at the end
+         *  
+         */
         private string StringToCSVCell(string str)
         {
             if (str.Contains(fieldsSeparator) || str.Contains("\"") || str.Contains(System.Environment.NewLine))
@@ -88,6 +100,17 @@ namespace TableauReportsDocumentor.Export_Converters
             return str + fieldsSeparator;
         }
 
+        /*
+         * Function: CreateSubSection
+         * Creates a subsection in a csv file
+         * 
+         * Parameters:
+         *  csvBuilder - a StringBuilder object holding a recipe for building a csv file at the current stage
+         *  subSection - a TRD xml node containing subsection data to be exported
+         *  
+         * Returns:
+         *  a StringBuilder object expanded with creation of the input subsection in csv form.
+         */
         private StringBuilder CreateSubSection(StringBuilder csvBuilder, XmlNode subSection)
         {
             csvBuilder.AppendLine();
@@ -108,12 +131,34 @@ namespace TableauReportsDocumentor.Export_Converters
             return csvBuilder;
         }
 
+        /*
+         * Function: CreateText
+         * A function creating a cell with given text in the csv file
+         * 
+         * Parameters:
+         *  csvBuilder - a StringBuilder object holding a recipe for building a csv file at the current stage
+         *  text - a TRD xml node containing text to be exported
+         *  
+         * Returns:
+         *  a StringBuilder object expanded with creation of a cell with given text
+         */
         private StringBuilder CreateText(StringBuilder csvBuilder, XmlNode text)
         {
             csvBuilder.AppendLine(StringToCSVCell(text.InnerText));
             return csvBuilder;
         }
 
+        /*
+         * Function: CreateTable
+         * A function creating a table with given contents in the csv form
+         * 
+         * Parameters:
+         *  csvBuilder - a StringBuilder object holding a recipe for building a csv file at the current stage
+         *  table - a TRD xml node containing all the table data to be exported
+         *  
+         * Returns:
+         *  a StringBuilder object expanded with creation of the given table in a csv form
+         */
         private StringBuilder CreateTable(StringBuilder csvBuilder, XmlNode table)
         {
             csvBuilder.AppendLine();
@@ -140,13 +185,31 @@ namespace TableauReportsDocumentor.Export_Converters
         }
 
         StringBuilder csvBuilder;
-
+        /* Function: ExportInit
+         * Initialisating export of a csv file.
+         * 
+         * Parameters:
+         *  reportTitle - title of the report
+         *  rootNode - root node of the TRD xml file
+         *  exportFileName - path to the desired output file
+         *  
+         */
         protected override void ExportInit(string reportTitle, XmlNode rootNode, string exportFileName)
         {
             csvBuilder = new StringBuilder();
             csvBuilder.AppendLine("Report;" + StringToCSVCell(reportTitle));
         }
 
+        /*
+         * Function: ExportEnd
+         * Finish the process of exporting to a csv file and save it.
+         * 
+         * Parameters:
+         *  reportTitle - title of the report
+         *  rootNode - root node of the TRD xml file
+         *  exportFileName - path to the desired output file
+         *  
+         */
         protected override bool ExportEnd(string reportTitle, XmlNode rootNode, string exportFileName)
         {
             File.WriteAllText(exportFileName, csvBuilder.ToString());
