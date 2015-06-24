@@ -24,11 +24,6 @@ namespace TableauReportsDocumentor.AppWindows
         public SettingsWindow()
         {
             InitializeComponent();
-            //Console.WriteLine("iUserConverter:" + Settings.Default.UserConverter);
-            //Console.WriteLine("iImportConvertersLocalization:" + Settings.Default.ImportConvertersLocalization);
-            //Console.WriteLine("iImportConverterDefaultInstance:" + Settings.Default.ImportConverterDefaultInstance);
-            //Console.WriteLine("iReportDocumentValidator:" + Settings.Default.ReportDocumentValidator);
-            //Console.WriteLine("iImportConvertersAutoSearch:" + Settings.Default.ImportConvertersAutoSearch);
         }
 
         string GetRelativePath(string filespec)
@@ -54,11 +49,6 @@ namespace TableauReportsDocumentor.AppWindows
             Settings.Default.ImportConvertersAutoSearch = ImportConvertersAutoSearchRB.IsChecked??true;
             Settings.Default.Save();
             this.Close();
-            //Console.WriteLine("UserConverter:" + Settings.Default.UserConverter);
-            //Console.WriteLine("ImportConvertersLocalization:" + Settings.Default.ImportConvertersLocalization);
-            //Console.WriteLine("ImportConverterDefaultInstance:" + Settings.Default.ImportConverterDefaultInstance);
-            //Console.WriteLine("ReportDocumentValidator:" + Settings.Default.ReportDocumentValidator);
-            //Console.WriteLine("ImportConvertersAutoSearch:" + Settings.Default.ImportConvertersAutoSearch);
         }
 
         private void ImportConvertersLocalizationChange(object sender, RoutedEventArgs e)

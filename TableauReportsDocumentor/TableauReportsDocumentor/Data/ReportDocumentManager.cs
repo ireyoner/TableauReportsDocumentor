@@ -132,38 +132,7 @@ namespace TableauReportsDocumentor.Data
                 }
                 else if (openFileDialog.FileName.EndsWith(".trdx"))
                 {
-                    this.FullFilePath = openFileDialog.FileName;
-                    var trdxXml = new XmlDocument();
-                    String originalTwb = "";
-
-                    FileStream appArchiveFileStream = new FileStream(openFileDialog.FileName, FileMode.Open, FileAccess.Read);
-                    using (ZipArchive archive = new ZipArchive(appArchiveFileStream, ZipArchiveMode.Read))
-                    {
-                        foreach (ZipArchiveEntry entry in archive.Entries)
-                        {
-                            if (entry.FullName.EndsWith("original.twb", StringComparison.OrdinalIgnoreCase))
-                            {
-                                using (Stream appManifestFileStream = entry.Open())
-                                {
-                                    StreamReader streamReader = new StreamReader(appManifestFileStream);
-                                    originalTwb = streamReader.ReadToEnd();
-                                    streamReader.Close();
-                                }
-                            }
-                            else if (entry.FullName.EndsWith("report.trd", StringComparison.OrdinalIgnoreCase))
-                            {
-                                using (Stream appManifestFileStream = entry.Open())
-                                {
-                                    StreamReader streamReader = new StreamReader(appManifestFileStream);
-                                    trdxXml.Load(streamReader);
-                                    streamReader.Close();
-                                }
-                            }
-                        }
-                    }
-
-                    this.Content = new ReportContent(originalTwb, trdxXml);
-                    return true;
+                    return Load(openFileDialog.FileName);
                 }
                 else
                 {
@@ -180,6 +149,48 @@ namespace TableauReportsDocumentor.Data
             }
         }
 
+        public bool Load(string uri)
+        {
+            if (uri.EndsWith(".trdx"))
+            {
+                this.FullFilePath = uri;
+                var trdxXml = new XmlDocument();
+                String originalTwb = "";
+
+                FileStream appArchiveFileStream = new FileStream(uri, FileMode.Open, FileAccess.Read);
+                using (ZipArchive archive = new ZipArchive(appArchiveFileStream, ZipArchiveMode.Read))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        if (entry.FullName.EndsWith("original.twb", StringComparison.OrdinalIgnoreCase))
+                        {
+                            using (Stream appManifestFileStream = entry.Open())
+                            {
+                                StreamReader streamReader = new StreamReader(appManifestFileStream);
+                                originalTwb = streamReader.ReadToEnd();
+                                streamReader.Close();
+                            }
+                        }
+                        else if (entry.FullName.EndsWith("report.trd", StringComparison.OrdinalIgnoreCase))
+                        {
+                            using (Stream appManifestFileStream = entry.Open())
+                            {
+                                StreamReader streamReader = new StreamReader(appManifestFileStream);
+                                trdxXml.Load(streamReader);
+                                streamReader.Close();
+                            }
+                        }
+                    }
+                }
+
+                this.Content = new ReportContent(originalTwb, trdxXml);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public bool SaveAs()
         {
             return Save(true);

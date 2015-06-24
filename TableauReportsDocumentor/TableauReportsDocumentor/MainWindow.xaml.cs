@@ -41,8 +41,17 @@ namespace TableauReportsDocumentor
         private Import Importer { get { return importer; } }
         private ReportDocumentManager Document { get { return document; } set { document = value; } }
 
+        public MainWindow(string uri)
+        {
+            SetUp();
+            Open(uri);
+        }
+
         public MainWindow()
         {
+            SetUp();
+        }
+        private void SetUp(){
             InitializeComponent();
             EditorView.statusLabel = statusLabel;
             try
@@ -64,8 +73,8 @@ namespace TableauReportsDocumentor
                 MessageBox.Show(e2.Message, "Init Error!");
                 this.Close();
             }
-        }
 
+        }
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
             ShowStatus("Exporting Document",Brushes.LightYellow);
@@ -106,11 +115,29 @@ namespace TableauReportsDocumentor
 
         private void Open(object sender, RoutedEventArgs e)
         {
-            ShowStatus("Opening Document",Brushes.LightYellow);
+            ShowStatus("Opening Document", Brushes.LightYellow);
             Boolean status = false;
             try
             {
                 status = Document.Open();
+                ShowStatus("Document Opened", Brushes.Green);
+            }
+            catch (Exception e2)
+            {
+                MessageBox.Show(e2.Message, "Open error!");
+                ShowStatus("Document Open Error!", Brushes.Red);
+            }
+            if (status)
+                WriteDocument();
+        }
+
+        private void Open(string uri)
+        {
+            ShowStatus("Opening Document", Brushes.LightYellow);
+            Boolean status = false;
+            try
+            {
+                status = Document.Load(uri);
                 ShowStatus("Document Opened", Brushes.Green);
             }
             catch (Exception e2)
