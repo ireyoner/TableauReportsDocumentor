@@ -93,6 +93,7 @@
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\ReportContent.cs" />
+    <Compile Include="Modules\ExportModule\Exporters\Instances\ExportDoc.cs" />
     <Compile Include="Modules\ExportModule\Exporters\Instances\ExportDocX.cs" />
     <Compile Include="Modules\ExportModule\Exporters\Instances\ExportCSV.cs" />
     <Compile Include="Modules\ExportModule\Exporters\ExporterInstance.cs" />
