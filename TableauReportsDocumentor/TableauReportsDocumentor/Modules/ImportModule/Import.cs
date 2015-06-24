@@ -1,4 +1,11 @@
-﻿using Microsoft.Win32;
+﻿/*
+ * File: Import.cs
+ * Class: Import
+ * 
+ * An class responsible for creating list of importers and their menagement
+ * 
+ */
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +28,12 @@ namespace TableauReportsDocumentor.Modules.ImportModule
         private RoutedEventHandler menuItemClick;
         private MenuItem importMenu;
 
+        /* Function: Import
+         * A constructor for the Import class with parameters. Responsible for registering event handlers, creating appropiate UI etc.
+         * 
+         * Parameters:
+         * 
+         */
         public Import(
             RoutedEventHandler menuItemClick,
             MenuItem importMenu)
@@ -32,12 +45,24 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             loadImportres();
         }
 
+        /* Function: loadImportres
+         * Creates list of possible importers, currently only one
+         * 
+         * Parameters:
+         * 
+         */
         private void loadImportres()
         {
             RegisterImporter(new ImportTWBandTWBX());
             // TO DO: tutaj dodać pobieranie dynamiczne zamiast tego
         }
 
+        /* Function: RegisterImporter
+         * Register new Importer
+         * 
+         * Parameters:
+         *  ImportInterface importer - registered Importer
+         */
         public void RegisterImporter(ImportInterface importer)
         {
             if (importer.MenuItemText != null)
@@ -48,6 +73,13 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             }
         }
 
+        /* Function: setupExporterMenuItem
+         * Adds new Importer to menu
+         * 
+         * Parameters:
+         *  String id - visible name
+         *  ImportInterface importer - Importer to add
+         */
         private void setupExporterMenuItem(String id, ImportInterface importer)
         {
             var menuItem = new MenuItem();
@@ -61,6 +93,14 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             importMenu.Items.Add(menuItem);
         }
 
+        /* Function: ImportDocument
+         * Function called after click on menu item
+         * 
+         * Parameters:
+         *  
+         * Returns:
+         *  ReportDocumentManager - imported document
+         */
         public ReportDocumentManager ImportDocument(object sender, RoutedEventArgs e)
         {
             ImportInterface importer;

@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * File: ReportContent.cs
+ * Class: ReportContent
+ * 
+ * An class containing report data 
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -125,6 +132,14 @@ namespace TableauReportsDocumentor.Data
 
         public String Original { get; private set; }
 
+        /* Function: ReportContent
+         * A group of constructors  
+         * 
+         * Parameters:
+         *  original - report source data (Tableau Workbook)
+         *  converted - report editable data (converted content)
+         * 
+         */
         public ReportContent()
         {
             SetupReportContent(null, null);
@@ -145,6 +160,14 @@ namespace TableauReportsDocumentor.Data
             SetupReportContent(original, converted);
         }
 
+        /* Function: SetupReportContent
+         * A function inicjalizing variables  
+         * 
+         * Parameters:
+         *  original - report source data (Tableau Workbook)
+         *  converted - report editable data (converted content)
+         * 
+         */
         private void SetupReportContent(String original, XmlDocument converted)
         {
             try
@@ -159,6 +182,11 @@ namespace TableauReportsDocumentor.Data
             this.Original = original;
         }
 
+        /* Validation with xsd mechanism:
+         * after each edition in report this handler is called
+         * 
+         * (Small magic works here)
+         */
         private ValidationEventHandler veh;
         private static void ValidationCallBack(object sender, ValidationEventArgs args)
         {
@@ -175,6 +203,14 @@ namespace TableauReportsDocumentor.Data
             throw new Exception("Document validation exception!\n" + message);
         }
 
+
+        /* Function: GetExportXml
+         * A function that removes all @visible='False' from report, it prepares data for eporters
+         * 
+         * Returns:
+         *  XmlDocument that contains only report nodes that are chcecked as visible
+         * 
+         */
         public XmlDocument GetExportXml()
         {
             XmlDocument doc = (XmlDocument)this.ConvertedXml.Clone();
@@ -192,16 +228,19 @@ namespace TableauReportsDocumentor.Data
 
             String delColXpath = "//table[header/hcell/@visible='False']";
             XmlNodeList tableList = doc.SelectNodes(delColXpath);
+            // removing for each table
             while (tableList.Count > 0)
             {
                 XmlNode table = tableList[0];
                 XmlNode tableHeader = tableList[0].SelectSingleNode("header");
                 XmlNodeList allHcells = table.SelectNodes("header/hcell");
+                // removing for each header cell
                 for (int i = allHcells.Count - 1; i >= 0; i--)
                 {
                     if (allHcells[i].Attributes["visible"].Value == "False")
                     {
                         tableHeader.RemoveChild(allHcells[i]);
+                        // in each row in table
                         foreach (XmlNode row in table.SelectNodes("rows/row"))
                         {
                             row.RemoveChild(row.SelectNodes("cell")[i]);

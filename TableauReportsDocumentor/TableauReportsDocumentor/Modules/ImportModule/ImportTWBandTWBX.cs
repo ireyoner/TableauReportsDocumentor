@@ -1,4 +1,11 @@
-﻿using Microsoft.Win32;
+﻿/*
+ * File: ImportTWBandTWBX.cs
+ * Class: ImportTWBandTWBX
+ * 
+ * Class responsible for importing and converting data from TWB TWBX files to Report XmlDocument
+ * 
+ */
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,8 +17,6 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using System.IO.Compression;
 using TableauReportsDocumentor.Data;
-
-//using System.IO.Compression.FileSystem;
 
 namespace TableauReportsDocumentor.Modules.ImportModule
 {
@@ -29,6 +34,16 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             get { return converted; }
         }
 
+        /*
+         * Function: ImportTWB
+         * Import data from TWB file
+         * 
+         * Parameters:
+         *  filename - a path to file to import
+         *  
+         * Returns:
+         *  if a import was succesfull 
+         */
         private Boolean ImportTWB(string filename)
         {
             if (filename.EndsWith(".twb"))
@@ -43,23 +58,39 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             return false;
         }
 
+        /*
+         * Function: ImportTWBfromXmlDocument
+         * Function responsible for converting original Tableau xml to report xml using xls converter.
+         * 
+         * Parameters:
+         *  myXPathDoc - original Tableau xml
+         *  
+         * Returns:
+         *  if a conversion was succesfull 
+         */
         private Boolean ImportTWBfromXmlDocument(XmlDocument myXPathDoc)
         {
 
             String xslPath = "";
+            // when auto search
             if (Properties.Settings.Default.ImportConvertersAutoSearch)
             {
+                //find original report version
                 String version = myXPathDoc.SelectSingleNode("/workbook/@version").InnerText;
+
+                // find valid converter for version
                 String converter = Properties.Settings.Default.ImportConvertersLocalization + "\\TRDCI_v" + version + ".xsl";
                 if (File.Exists(converter))
                 {
                     xslPath = converter;
                 }
+                // if not exist valid converter for fersion get fallback converter
                 if ("".Equals(xslPath) && File.Exists(Properties.Settings.Default.ImportConverterDefaultInstance))
                 {
                     xslPath = Properties.Settings.Default.ImportConverterDefaultInstance;
                 }
             }
+            // when user defined converter
             else
             {
                 if (File.Exists(Properties.Settings.Default.UserConverter))
@@ -87,6 +118,16 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             return true;
         }
 
+        /*
+         * Function: ImportTWBX
+         * Import data from TWBX file
+         * 
+         * Parameters:
+         *  filename - a path to file to import
+         *  
+         * Returns:
+         *  if a import was succesfull 
+         */
         private Boolean ImportTWBX(string filename)
         {
             if (filename.EndsWith(".twbx"))
@@ -114,6 +155,16 @@ namespace TableauReportsDocumentor.Modules.ImportModule
             return false;
         }
 
+        /*
+         * Function: filename
+         * calls specific importer for file version
+         * 
+         * Parameters:
+         *  filename - a path to file to import
+         *  
+         * Returns:
+         *  if a import was succesfull 
+         */
         public Boolean ImportTableauWorkbook(string filename)
         {
             original = null;

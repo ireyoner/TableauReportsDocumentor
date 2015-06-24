@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * File: XElementConverter.cs
+ * Class: XElementConverter
+ * 
+ * Class responsible for delivering data to build report tree
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
